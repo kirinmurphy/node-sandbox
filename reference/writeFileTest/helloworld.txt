@@ -1,2 +1,0 @@
-Hello world yo!
-I love node.js
