@@ -35,7 +35,6 @@ app.get('/addpost1', (req, res) => {
     if ( err ) throw err;
     console.log('result', result);
     res.send('Post 1 added');
-
   });
 });
 
@@ -47,7 +46,6 @@ app.get('/addpost2', (req, res) => {
     if ( err ) throw err;
     console.log('result', result);
     res.send('Post 2 added');
-
   });
 });
 
@@ -85,7 +83,6 @@ app.get('/deletepost/:id', (req, res) => {
     if (err) throw err;
     console.log('deleted post');
     res.send(`Post deleted`);
-
   });  
 });
 
@@ -93,7 +90,6 @@ db.connect((err) => {
   if(err) { throw err; }
   console.log('Mysql connected...');
 })
-
 
 const PORT = '5001';
 app.listen(PORT, () => {

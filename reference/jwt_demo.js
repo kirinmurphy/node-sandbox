@@ -51,7 +51,6 @@ function verifyToken (req, res, next) {
   } else {
     res.sendStatus(403);
   }
-
 }
 
 app.listen(5001, () => console.log('Server started on 5001'));

@@ -7,8 +7,3 @@ console.log(myUrl);
 myUrl.searchParams.append('abc', '123');
 
 console.log(myUrl.searchParams);
-
-
-
-
-

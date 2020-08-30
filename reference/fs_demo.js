@@ -1,33 +1,57 @@
 const fs = require('fs');
 const path = require('path');
 
-// fs.mkdir(path.join(__dirname, '/test'), {}, error => {
-//   if (error) throw error;
-//   console.log('Folder created!');
-// });
+const distFolderName = '/writeFileTest';
+const distFolder = path.join(__dirname, distFolderName);
 
-// Create and write to file
-// fs.writeFile(path.join(__dirname, '/test/', 'hello.txt'),
-//   'Hello World!',
-//    error => {
-//      if (error) throw error;
-//      console.log('file writen to');
+const newFileName = 'hello.txt';
+const newFile = path.join(__dirname, distFolderName, newFileName);
+const updatedFileName = 'helloworld.txt';
+const updatedFile = path.join(__dirname, distFolderName, updatedFileName);
 
-//      fs.appendFile(path.join(__dirname, '/test/', 'hello.txt'),
-//      ' I love node.js',
-//       error => {
-//         if (error) throw error;
-//         console.log('file writen to');
-//       }
-//    );     
-//    }
-// );
+const fileContents = 'Hello world yo!';
+const appendedContent = '\nI love node.js';
 
-fs.readFile(path.join(__dirname, '/test', 'hello.txt'), 'utf8', (err, data) => {
-  console.log('data', data);
-});
+const options = (process.argv.slice(2));
 
-fs.rename(path.join(__dirname, '/test', 'hello.txt'), path.join(__dirname, 'test', 'helloworld.txt'), error => {
-  if (error) { console.log('error'); }
-});
+const deleting = options.filter(option => option === '--delete').length === 1;
 
+if ( deleting ) {
+  try {
+    fs.unlinkSync(updatedFile);
+    fs.rmdirSync(path.join(__dirname, distFolderName));
+  } catch (error) {
+    console.log('error: ', error);
+  }
+} else { 
+  try {
+    fs.mkdirSync(distFolder);
+    fs.writeFileSync(newFile, fileContents);
+    fs.appendFileSync(newFile, appendedContent);
+    fs.renameSync(newFile, updatedFile);
+    const data = fs.readFileSync(updatedFile, 'utf8');
+    console.log('data: ', data);
+  } catch (error) {
+    console.log('error: ', error);
+  }
+
+  // fs.mkdir(distFolder, {}, error => {
+  //   if (error) throw error;
+  
+  //   fs.writeFile(newFile, fileContents, (error) => {
+  //     if (error) throw error;
+  
+  //     fs.appendFile(newFile, appendedContent, (error) => {
+  //       if (error) throw error;
+  
+  //       fs.rename(newFile, updatedFile, error => {
+  //         if (error) { console.log('error'); }
+  
+  //         fs.readFile(updatedFile, 'utf8', (error, data) => {
+  //           if (error) throw error;
+  //         });
+  //       });  
+  //     });  
+  //   });  
+  // });
+}

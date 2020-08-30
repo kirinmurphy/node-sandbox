@@ -1,9 +1,15 @@
 const EventEmitter = require('events');
+const uuid = require('uuid');
 
-class MyEmitter extends EventEmitter {}
+class Logger extends EventEmitter {
+  log(msg) {
+    console.log('fff');
+    this.emit('message', { id: uuid.v4(), msg });
+  }
+}
 
-const myEmitter = new MyEmitter();
+const logger = new Logger();
 
-myEmitter.on('someEvent', () => console.log('Event Fired'));
+logger.on('message', (data) => console.log('Called Listener:', data));
 
-myEmitter.emit('someEvent');
+logger.log('Jeammmms');
