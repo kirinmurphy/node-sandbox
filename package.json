@@ -2,10 +2,10 @@
   "name": "node-tut2",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node app",
-    "dev": "nodemon app"
+    "start": "node server",
+    "dev": "nodemon server"
   },
   "author": "Balls",
   "license": "ISC",

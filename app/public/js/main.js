@@ -9,25 +9,19 @@ const { username, room } = Qs.parse(location.search, {
 
 const socket = io();
 
-// Join chatroom
 socket.emit('joinRoom', { username, room });
 
-// Get room and users
 socket.on('roomUsers', ({ room, users }) => {
   outputRoomName(room);
   outputUsers(users);
 });
 
-// Message from server
 socket.on('message', message => {
   console.log('message', message);
   outputMessage(message);
-
-  // Scroll dowm
   chatMessages.scrollTop = chatMessages.scrollHeight;
 });
 
-// Message submit
 chatForm.addEventListener('submit', (event) => {
   event.preventDefault();
   const msg = event.target.elements.msg.value;

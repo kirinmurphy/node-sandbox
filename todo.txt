@@ -1,1 +1,7 @@
-- move chat widget
+- error on sql responses
+- sql on heroku
+- sql injection
+
+- reactify front end 
+- set cookie 
+- bot detection - https://antoinevastel.com/bot/2020/05/10/express-middleware-bot.html
