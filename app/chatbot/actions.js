@@ -7,12 +7,12 @@ const {
   getRoomUsers 
 } = require('./users');
 
-const MSG_BOT_NAME = 'Chatcorn bot';
+const MSG_BOT_NAME = 'CincoChat bot';
 const SOCKET_EVENT_MESSAGE = 'message';
 
 function joinRoom (io, socket, user) {
   const { username, room } = user;
-  const welcomeText = 'Welcome to Chatcord!'; 
+  const welcomeText = 'Welcome to CincoChat!'; 
   const welcomeMessage = formatMessage(MSG_BOT_NAME, welcomeText);
   const joinedText = `${username} has joined the chat`;
   const joinedMessage = formatMessage(MSG_BOT_NAME, joinedText);

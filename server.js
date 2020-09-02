@@ -2,7 +2,8 @@ const path = require('path');
 const http = require('http');
 const express = require('express');
 const jwt = require('./app/jwt_demo');
-const posts = require('./app/posts');
+const posts = require('./app/resources/posts');
+const chatRooms = require('./app/resources/chatRooms');
 
 const app = express();
 const server = http.createServer(app);
@@ -10,6 +11,8 @@ const server = http.createServer(app);
 require('./app/chatbot')(server);
 
 app.use('/jwt', jwt);
+
+app.use('/api/chatRooms', chatRooms);
 
 app.use('/posts', posts);
 

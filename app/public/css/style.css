@@ -6,6 +6,9 @@
 	--light-color: #e6e9ff;
 	--success-color: #5cb85c;
 	--error-color: #d9534f;
+	--button-color: var(--light-color);
+
+	--fontSize-small: .8rem;
 }
 
 * {
@@ -14,9 +17,16 @@
 	padding: 0;
 }
 
+body,
+.btn,
+input, 
+textarea,
+select {
+	font-family: Courier New, sans-serif;
+}
+
 body {
-	font-family: 'Roboto', sans-serif;
-	font-size: 16px;
+	font-size: 20px;
 	background: var(--light-color);
 	margin: 20px;
 }
@@ -29,13 +39,41 @@ a {
 	text-decoration: none;
 }
 
+textarea {
+	min-height:200px;
+	width:100%;
+	padding:.5rem;
+}
+
 .btn {
 	cursor: pointer;
 	padding: 5px 15px;
-	background: var(--light-color);
+	background: var(--button-color);
 	color: var(--dark-color-a);
 	border: 0;
 	font-size: 17px;
+}
+
+.link {
+	cursor:pointer;
+}
+
+a, 
+.link { color:#36a; }
+
+a:hover,
+.link:hover {
+	text-decoration:underline;
+}
+
+.panel--inverted {
+	color:#fff;
+}
+
+.panel--inverted .link,
+.panel--inverted a {
+	color:#fff;
+	text-decoration: underline;
 }
 
 /* Chat Page */
@@ -177,6 +215,10 @@ a {
 .join-main .btn {
 	margin-top: 20px;
 	width: 100%;
+}
+
+.blowup-colors-actions .link {
+	font-size:.85rem;
 }
 
 @media (max-width: 700px) {

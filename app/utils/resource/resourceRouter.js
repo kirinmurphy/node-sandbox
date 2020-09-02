@@ -1,7 +1,6 @@
 const app = require('express');
-const router = app.Router();
 
-const dbConfig = require('../config/db.config');
+const dbConfig = require('../../config/db.config');
 
 const {
   addOne,
@@ -16,14 +15,17 @@ const makeQuery = require('./makeQuery');
 const getSql = require('./getSql');
 
 module.exports = function (props) {
-  const sql = getSql({ ...props, databaseName: dbConfig.database });
+  const router = app.Router();
 
-  makeQuery(sql.createDatabase);
-  makeQuery(sql.useDatabase);
-  makeQuery(sql.creatTable);
+  const databaseName = dbConfig.database; 
+  const sql = getSql({ ...props, databaseName });
+
+  makeQuery(sql.createTable);
 
   router.use((req, res, next) => {
-    req.resourceProps = props;
+    req.editableFields = props.editableFields; 
+    req.requiredFields = props.requiredFields;
+    req.tableName = props.tableName; 
     req.sql = sql;
     next();
   });

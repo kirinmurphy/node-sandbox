@@ -6,15 +6,15 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
 		<link rel="stylesheet" href="css/style.css" />
-		<title>ChatCord App</title>
+		<title>Node Stuff</title>
 	</head>
 	<body>
 		<div class="join-container">
 			<header class="join-header">
-				<h1> ChatCord</h1>
+				<h1>CincoChat</h1>
 			</header>
-			<main class="join-main">
-				<form action="chat.html">
+			<main class="join-main panel panel--inverted">
+				<form id="join-form" action="chat.html">
 					<div class="form-control">
 						<label for="username">Username</label>
 						<input
@@ -28,17 +28,43 @@
 					<div class="form-control">
 						<label for="room">Room</label>
 						<select name="room" id="room">
-							<option value="JavaScript">JavaScript</option>
-							<option value="Python">Python</option>
-							<option value="PHP">PHP</option>
-							<option value="C#">C#</option>
-							<option value="Ruby">Ruby</option>
-							<option value="Java">Java</option>
 						</select>
+						<span id="add-new-room" class="link">Add New Room</span>
 					</div>
 					<button type="submit" class="btn">Join Chat</button>
 				</form>
+
+				<form id="add-new-room-form" style="display:none;">
+					<div class="form-control">
+						<label for="username">Room Name</label>
+						<input
+							type="text"
+							name="name"
+							id="room-name"
+							placeholder="Enter room name..."
+							required
+						/>
+					</div>
+
+					<div class="form-control">
+						<label for="username">Room Description</label>
+						<textarea name="description"
+							id="room-description"
+							placeholder="Describe the room to potential users"></textarea>
+					</div>
+
+					<button type="submit" class="btn">Add New Room</button>
+					<span id="cancel-add-room" class="link">Cancel</span>
+				</form>
 			</main>
+	
+			<div class="blowup-colors-actions">
+				<span id="blowup-colors" class="link">These colors are boring.</span>
+				<span id="ok-too-much" class="link" 
+					style="display:none;">Try these.</span>
+			</div>
 		</div>
+		<script src="js/joinChat.js"></script>
+		<script src="js/blowupColors.js"></script>
 	</body>
 </html>

@@ -1,7 +1,10 @@
+- socket.io docs
+- switch between local and heroku databases in code
+- hide environment variables from repo? 
 - error on sql responses
-- sql on heroku
-- sql injection
+- sql injection check
 
 - reactify front end 
 - set cookie 
 - bot detection - https://antoinevastel.com/bot/2020/05/10/express-middleware-bot.html
+- try mongoose or mongo js

@@ -1,4 +1,4 @@
-const resourceRouter = require('./resource/resourceRouter.js');
+const resourceRouter = require('../utils/resource/resourceRouter.js');
 
 const requiredFields = ['title', 'body'];
 

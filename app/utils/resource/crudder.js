@@ -4,7 +4,8 @@ function addOne (req, res) {
   const { 
     query, 
     sql, 
-    resourceProps: { requiredFields, editableFields } 
+    requiredFields, 
+    editableFields 
   } = req;
 
   const matchingFields = getMatchingFields(query, editableFields);
@@ -27,6 +28,7 @@ function addOne (req, res) {
 
 function getCollection (req, res) {
   const { sql } = req;
+  console.log('sql.getConn', )
   makeQuery(sql.getCollection).then((results) => {
     res.json({ collection: results });
   });
@@ -49,7 +51,8 @@ function updateOne (req, res) {
     query, 
     params: { id },
     sql,
-    resourceProps: { editableFields } 
+    editableFields, 
+    tableName 
   } = req;
   
 const matchingFields = getMatchingFields(query, editableFields);
@@ -61,7 +64,7 @@ const matchingFields = getMatchingFields(query, editableFields);
       if ( affectedRows ) {       
         res.json({ id, ...cleanedQuery });
       } else {
-        res.status(404).send(`${req.resourceProps.tableName} Id: ${id} not found`);
+        res.status(404).send(`${tableName} Id: ${id} not found`);
       }
     });
   } else {

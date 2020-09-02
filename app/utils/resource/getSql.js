@@ -4,7 +4,7 @@ module.exports = ({ databaseName, tableName, tableColumns }) => {
     createDatabase: `CREATE DATABASE IF NOT EXISTS ${databaseName}`,
     dropDatabase: `DROP database ${databaseName};`,
     useDatabase: `USE ${databaseName}`,
-    creatTable: `CREATE TABLE IF NOT EXISTS ${tableName}${tableColumns}`,
+    createTable: `CREATE TABLE IF NOT EXISTS ${tableName}${tableColumns}`,
     insertEntry: `INSERT INTO ${tableName} SET ?`,
     getCollection: `SELECT * from ${tableName}`,
     getEntry: id => `SELECT * from ${tableName} WHERE id = ${id}`,

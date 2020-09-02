@@ -1,7 +1,9 @@
+
 // module.exports = {
 //   host: 'localhost',
 //   user: 'root',
-//   password: 'serenity_now'
+//   password: 'serenity_now',
+//   database: 'localNodePracticeDb'
 // };
 
 module.exports = {
