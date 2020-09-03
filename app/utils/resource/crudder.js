@@ -28,7 +28,6 @@ function addOne (req, res) {
 
 function getCollection (req, res) {
   const { sql } = req;
-  console.log('sql.getConn', )
   makeQuery(sql.getCollection).then((results) => {
     res.json({ collection: results });
   });

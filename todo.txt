@@ -1,10 +1,15 @@
+- hide environment variables from repo
+- connect mongo db on heroku
+- mongo js docs
+- clear add form messages
+- filter get results by room
+- index a collection
+
 - socket.io docs
-- switch between local and heroku databases in code
-- hide environment variables from repo? 
 - error on sql responses
 - sql injection check
 
 - reactify front end 
 - set cookie 
 - bot detection - https://antoinevastel.com/bot/2020/05/10/express-middleware-bot.html
-- try mongoose or mongo js
+- try mongoose or mongo jqs

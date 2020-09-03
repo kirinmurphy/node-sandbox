@@ -2,6 +2,8 @@ const chatForm = document.getElementById('chat-form');
 const chatMessages = document.querySelector('.chat-messages');
 const roomName = document.getElementById('room-name');
 const userList = document.getElementById('users');
+const chatCurrent = document.querySelector('.chat-current');
+const chatHistory = document.querySelector('.chat-history');
 
 const { username, room } = Qs.parse(location.search, {
   ignoreQueryPrefix: true
@@ -16,10 +18,18 @@ socket.on('roomUsers', ({ room, users }) => {
   outputUsers(users);
 });
 
+socket.on('getHistory', messages => {
+  console.log('messages', messages);
+  messages.map(message => outputMessage(chatHistory, message));
+});
+
 socket.on('message', message => {
-  console.log('message', message);
-  outputMessage(message);
+  outputMessage(chatCurrent, message);
   chatMessages.scrollTop = chatMessages.scrollHeight;
+});
+
+socket.on('savedMessage', message => {
+  console.log('messageSaved', message);
 });
 
 chatForm.addEventListener('submit', (event) => {
@@ -30,20 +40,21 @@ chatForm.addEventListener('submit', (event) => {
   event.target.elements.msg.focus();
 });
 
-function outputMessage (message) {
+
+// HELPERS
+function outputMessage (container, message) {
+  const messagesHtml = getMessageTemplate(message);
+  container.appendChild(messagesHtml);
+}
+
+function getMessageTemplate ({ username, time = '???', text }) {
   const div = document.createElement('div');
   div.classList.add('message');
-
   div.innerHTML = `
-    <p class="meta">
-      ${message.username} <span>${message.time}</span>
-    </p>
-    <p class="text">
-      ${message.text}
-    </p>
+    <p class="meta">${username} <span>${time}</span></p>
+    <p class="text">${text}</p>
   `;
-  
-  document.querySelector('.chat-messages').appendChild(div);
+  return div;
 }
 
 function outputRoomName(room) {
