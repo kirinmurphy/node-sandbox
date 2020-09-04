@@ -1,16 +1,17 @@
 - hide environment variables from repo
-- connect mongo db on heroku
-- mongo js docs
-- clear add form messages
-- filter get results by room
-- index a collection
 - mongo db whitelisted addresses on mongodb atlas
 
+- clear add form messages
+- index a collection
+
+more reading
+- mongo js docs
 - socket.io docs
 - error on sql responses
 - sql injection check
+- to close or not to close a mongo db connection?
 
-- reactify front end 
+- reactify front end - https://www.freecodecamp.org/news/create-a-react-frontend-a-node-express-backend-and-connect-them-together-c5798926047c/
 - set cookie 
 - bot detection - https://antoinevastel.com/bot/2020/05/10/express-middleware-bot.html
 - try mongoose or mongo jqs
