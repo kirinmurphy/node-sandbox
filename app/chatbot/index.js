@@ -15,18 +15,27 @@ const connectionString = `${MONGO_USER}:${MONGO_DB_PSWD}@${MONGO_HOST}/${MONGO_D
 const uri = `mongodb+srv://${connectionString}?retryWrites=true&w=majority`;
 
 module.exports = function (server) {
-  const client = new MongoClient(uri, { useNewUrlParser: true });
+  const mongoClient = new MongoClient(uri, { useNewUrlParser: true });
   const io = socketio(server);
 
-  client.connect(err => {
+  mongoClient.connect(err => {
     if ( err ) { throw err; }
   
-    const collection = client.db(MONGO_DB_NAME).collection("chatRoom");
+    const collection = mongoClient.db(MONGO_DB_NAME).collection("chatRoom");
   
     io.on('connection', (socket) => {
-      socket.on('joinRoom', (user) => joinRoom(io, socket, user, collection));
+      socket.on('joinRoom', async (user) => { 
+        await joinRoom(io, socket, user, collection);
+        // TODO: closing it like this blows up future calls
+        // do i need to make a .connect for each DB call and close them independently?
+        // do i need to close it after every call?
+        // mongoClient.close();
+      });
     
-      socket.on('sendMessage', (msg) => sendMessage(io, socket, msg, collection));
+      socket.on('sendMessage', async (msg) => { 
+        await sendMessage(io, socket, msg, collection);
+        // mongoClient.close();
+      });
     
       socket.on('disconnect', () => leaveRoom(io, socket.id));
   
@@ -36,15 +45,3 @@ module.exports = function (server) {
     });    
   });
 };
-
-
-// collection.insert({ test: 'fongher boylston' }, (err, data) => {
-//   console.log('updated', data);
-
-//   const results = collection.find().limit(100).sort({ _id:1 });
-//   results.toArray((another, something) => {
-//     if (another) throw another;
-//     console.log('asdf', something);    
-//     client.close();
-//   });  
-// });  

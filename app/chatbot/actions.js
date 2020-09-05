@@ -17,17 +17,32 @@ const copy = {
 };
 
 function joinRoom (io, socket, user, collection) {
-  connectToRoom(io, socket, user);
-  getPreviousEntries(socket, user, collection);
-  addToUsersCollection(socket.id, user);
-  socket.emit(SOCKET_EVENT_MESSAGE, copy.welcome);
+  return new Promise ((resolve, reject) => {
+    connectToRoom(io, socket, user);
+    socket.emit(SOCKET_EVENT_MESSAGE, copy.welcome);
+
+    const results = collection.find({ room:user.room }).limit(100).sort({ _id:1 });
+    results.toArray((err, res) => {
+      if (err) reject(err);
+      socket.emit('getHistory', res);
+      resolve();
+    });
+  });
 }
 
 function sendMessage (io, socket, msg, collection) {
-  const { username, room } = getCurrentUser(socket.id);
-  const entry = { username, room, text:msg };
-  addNewEntry(socket, collection, entry);
-  io.to(room).emit(SOCKET_EVENT_MESSAGE, formatMessage(username, msg));
+  return new Promise ((resolve, reject) => {
+    const { username, room } = getCurrentUser(socket.id);
+    const entry = { username, room, text:msg };
+  
+    collection.insertOne(entry, (err, data) => {
+      if ( err ) reject(err);
+      socket.emit('savedMessage', [data]);
+      resolve();
+    });  
+  
+    io.to(room).emit(SOCKET_EVENT_MESSAGE, formatMessage(username, msg));  
+  });
 }
 
 function leaveRoom (io, socketId) {
@@ -40,24 +55,13 @@ function leaveRoom (io, socketId) {
 }
 
 // HELPERS
-function getPreviousEntries (socket, { room }, collection) {
-  const results = collection.find({ room:room }).limit(100).sort({ _id:1 });
-  results.toArray((err, res) => {
-    if (err) throw err;
-    socket.emit('getHistory', res);
-  });  
-}
-
-function addNewEntry (socket, collection, entry) {
-  collection.insert(entry, (err, data) => {
-    socket.emit('savedMessage', [data]);
-  });  
-}
-
-function connectToRoom (io, socket, { username, room }) {
+function connectToRoom (io, socket, user) {
+  const { username, room } = user;
   socket.join(room);
   socket.broadcast.to(room).emit(SOCKET_EVENT_MESSAGE, copy.newUserAdded(username)); 
+  addToUsersCollection(socket.id, user);
   updateRoomState(io, room);
+
 }
 
 function updateRoomState (io, room) {

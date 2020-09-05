@@ -4,6 +4,7 @@
 - clear add form messages
 - filter get results by room
 - index a collection
+- mongo db whitelisted addresses on mongodb atlas
 
 - socket.io docs
 - error on sql responses

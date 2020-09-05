@@ -6,3 +6,5 @@
 [Traversy Media - SocketID & Node](https://youtu.be/jD7FnbI76Hg)
 
 [Deploy node with mysql on heroku](https://bezkoder.com/deploy-node-js-app-heroku-cleardb-mysql/)
+
+[MonboDb with Atlas](https://stackoverflow.com/questions/42159175/connecting-heroku-app-to-atlas-mongodb-cloud-service)
