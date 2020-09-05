@@ -54,7 +54,7 @@ function updateOne (req, res) {
     tableName 
   } = req;
   
-const matchingFields = getMatchingFields(query, editableFields);
+  const matchingFields = getMatchingFields(query, editableFields);
   if ( matchingFields.length ) {
     
     const cleanedQuery = getCleanedQuery(matchingFields, query);

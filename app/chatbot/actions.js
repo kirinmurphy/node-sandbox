@@ -23,7 +23,7 @@ function joinRoom (io, socket, user, collection) {
 
     const results = collection.find({ room:user.room }).limit(100).sort({ _id:1 });
     results.toArray((err, res) => {
-      if (err) reject(err);
+      if (err) return reject(err);
       socket.emit('getHistory', res);
       resolve();
     });
@@ -36,7 +36,7 @@ function sendMessage (io, socket, msg, collection) {
     const entry = { username, room, text:msg };
   
     collection.insertOne(entry, (err, data) => {
-      if ( err ) reject(err);
+      if ( err ) return reject(err);
       socket.emit('savedMessage', [data]);
       resolve();
     });  
@@ -75,3 +75,4 @@ module.exports = {
   leaveRoom,
   updateRoomState
 };
+

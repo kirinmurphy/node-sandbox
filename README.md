@@ -2,12 +2,13 @@ https://codethings-node-stuff.herokuapp.com/
 
 ### Full Stack Fake Slack
 My node.js playground to work with some new stuff.  So far includes:  
-- a rest api for creating chat rooms tied to a mySQL instance 
-- a socket.io chat server tied to a mongoDb instance (in `mongoing` branch until I figure out how to get mongoDb working on heroku)
+- a rest api for creating chat rooms saved to a mySQL instance 
+- a socket.io chat server with messsages saved to a mongoDb instance (using MongoDB Atlas)
 - a contrived JWT proof of concept
-- vanilla es6-ified javascript on the client
+- vanilla es6-ified javascript on the client (not bad in 2020)
+- deployed to Heroku
 
-### Help Links    
+### Helpful Links    
 [Traversy Media - MySQL & Node](https://youtu.be/EN6Dx22cPRI)   
 [MySQL & Node setup](https://www.terlici.com/2015/08/13/mysql-node-express.html)   
 [Express & MySql](https://bezkoder.com/node-js-rest-api-express-mysql/)   
