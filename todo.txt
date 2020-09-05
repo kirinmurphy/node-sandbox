@@ -10,6 +10,7 @@ more reading
 - error on sql responses
 - sql injection check
 - to close or not to close a mongo db connection?
+  https://stackoverflow.com/questions/14495975/why-is-it-recommended-not-to-close-a-mongodb-connection-anywhere-in-node-js-code
 
 - reactify front end - https://www.freecodecamp.org/news/create-a-react-frontend-a-node-express-backend-and-connect-them-together-c5798926047c/
 - set cookie 
