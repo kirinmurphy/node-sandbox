@@ -22,8 +22,7 @@
   });
   
   socket.on('getHistory', messages => {
-    console.log('messages', messages);
-    messages.map(message => outputMessage(elements.chatHistory, message));
+    messages.forEach(message => outputMessage(elements.chatHistory, message));
     scrollToEndOfChat();
   });
   

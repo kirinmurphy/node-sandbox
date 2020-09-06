@@ -11,22 +11,12 @@
   }
 
   const cssVars = getAllCSSVariableNames();
-  // const originalCSSProps = { 
-  //   ...getElementCSSVariables(cssVars, document.documentElement)
-  // };
   
   let interval;
 
   elements.blowItUp.addEventListener('click', () => {
-    firstTime = false;
     interval = setInterval(blowUpColors, 1);
-    elements.blowItUp.innerText = copy.stillDontLikeIt;
-    elements.blowItUp.style = 'display:none;';
-    elements.okTooMuch.style = 'display:block';
-    [...elements.buttons].forEach(button => {
-      button.style.color = '#fff';
-      button.style.fontWeight = 'bold';  
-    });
+    setBlownUpScreenState();
   });
 
   elements.okTooMuch.addEventListener('click', () => {
@@ -40,19 +30,32 @@
   }
 
   function getRandomRGB () {
-    // range + offset must be less than 255
-    const range = 40;
-    const offset = 160;  
-    const randomR = Math.random() * range + offset;
-    const randomG = Math.random() * range + offset;
-    const randomB = Math.random() * range + offset;
+    const randomR = getColorValue();
+    const randomG = getColorValue();
+    const randomB = getColorValue();
     return `rgb(${randomR}, ${randomG}, ${randomB})`;
+  }
+
+  function getColorValue (range = 40, offset = 60) {
+    // range + offset must be less than 255
+    return Math.random() * range + offset;
   }
 
   function setColor (variable, color) {
     const style = document.documentElement.style;
     style.setProperty(variable, color);
   }
+
+  function setBlownUpScreenState () {
+    elements.blowItUp.innerText = copy.stillDontLikeIt;
+    elements.blowItUp.style = 'display:none;';
+    elements.okTooMuch.style = 'display:block';
+    [...elements.buttons].forEach(button => {
+      button.style.color = '#fff';
+      button.style.fontWeight = 'bold';  
+    });  
+  }
+
 
 
   // -- VARIABLE GETTERS ----------------------- //

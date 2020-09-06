@@ -45,7 +45,7 @@ module.exports = router;
 function verifyToken (req, res, next) {
   const bearerHeader = req.headers['authorization'];
 
-  console.log('asdf', bearerHeader);
+  console.log('bearer header', bearerHeader);
 
   if (typeof bearerHeader !== 'undefined') {
     const bearerToken = bearerHeader.split(' ')[1];

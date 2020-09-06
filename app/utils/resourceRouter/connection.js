@@ -1,22 +1,18 @@
 const mysql = require('mysql');
 
-const dbConfig = require('../../config/db.config');
+const DATABASE_URL = process.env.DATABASE_URL || null;
+const trimmedDbUrl = DATABASE_URL.replace('mysql://','').replace('?reconnect=true','');
 
 const dbConnection = mysql.createPool({
-  host: dbConfig.host,
-  user: dbConfig.user,
-  password: dbConfig.password,
-  database: dbConfig.database,
+  user: trimmedDbUrl.split(':')[0],
+  password: trimmedDbUrl.split(':')[1].split('@')[0],
+  host: trimmedDbUrl.split('@')[1].split('/')[0],
+  database: trimmedDbUrl.split('/')[1],
   connectionLimit: 10
 });
 
-// connection.connect((err) => {
-//   if(err) { throw err; }
-//   console.log('Mysql connected...');
-// });
-
 dbConnection.on('connection', function (connection) {
-  console.log('DB Connection established');
+  console.log('mySql connected...');
 
   connection.on('error', function (err) {
     console.error(new Date(), 'MySQL error', err.code);
@@ -24,7 +20,6 @@ dbConnection.on('connection', function (connection) {
   connection.on('close', function (err) {
     console.error(new Date(), 'MySQL close', err);
   });
-
 });
 
 module.exports = dbConnection;

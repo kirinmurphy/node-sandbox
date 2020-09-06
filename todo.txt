@@ -1,4 +1,3 @@
-- hide environment variables from repo
 - mongo db whitelisted addresses on mongodb atlas
 - clear add form messages
 - index a collection

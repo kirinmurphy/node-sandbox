@@ -1,6 +1,4 @@
-const resourceRouter = require('../utils/resource/resourceRouter.js');
-
-const requiredFields = ['name'];
+const resourceRouter = require('../utils/resourceRouter');
 
 const props = {
   tableName: 'chat_rooms',
@@ -10,8 +8,8 @@ const props = {
     description VARCHAR(255), 
     PRIMARY KEY (id)
   )`,
-  requiredFields: requiredFields,
-  editableFields: [...requiredFields, 'description']
+  requiredFields: ['name'],
+  optionalFields: ['description']
 };
 
 module.exports = resourceRouter(props);

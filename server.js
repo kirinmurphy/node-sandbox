@@ -4,20 +4,16 @@ const express = require('express');
 
 require('dotenv').config();
 
-const jwt = require('./app/jwt_demo');
-const posts = require('./app/resources/posts');
-const chatRooms = require('./app/resources/chatRooms');
-
 const app = express();
 const server = http.createServer(app);
 
 require('./app/chatbot')(server);
 
-app.use('/jwt', jwt);
+app.use('/jwt', require('./app/jwt_demo'));
 
-app.use('/api/chatRooms', chatRooms);
+app.use('/api/chatRooms', require('./app/resources/chatRooms'));
 
-app.use('/posts', posts);
+app.use('/posts', require('./app/resources/posts'));
 
 app.use(express.static(path.join(__dirname, './app/public')));
 

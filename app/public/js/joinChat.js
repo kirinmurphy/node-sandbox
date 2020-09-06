@@ -17,16 +17,17 @@
 
   elements.cancelNewRoomForm.addEventListener('click', hideAddForm);
 
+  
   // HELPERS
-  function getRooms () {
-    return fetch(API_PATH).then((response) => {
-      return response.json();
-    }).then(({ collection }) => {
+  async function getRooms () {
+    try {
+      const response = await fetch(API_PATH);
+      const { collection } = await response.json();
       const template = ({ id, name }) => `<option vaule=${id}>${name}</option>`;
-      elements.roomSelector.innerHTML = collection.map(template).join('');
-    }).catch(err => {
-      console.log('err: ', err);
-    });
+      elements.roomSelector.innerHTML = collection.map(template).join('');  
+    } catch (err) {
+      console.log('get rooms failed'); // TODO - what UX do we want here
+    }
   }
 
   function onTriggerAddForm (event) {
@@ -34,23 +35,20 @@
     showAddForm();
   }
 
-  function onAddFormSubmit (event) {
+  async function onAddFormSubmit (event) {
     event.preventDefault();
-
     const url = getUrl(event, ['name', 'description']);
+    await saveNewRoom(url);
+    await getRooms();
+    hideAddForm();
+  }
 
-    fetch(url, { method: 'POST' }).then((response) => {
-      return response.json();
-    }).then(async () => {
-      try {
-        await getRooms();
-        hideAddForm();  
-      } catch (err) { 
-        console.error(err);
-      }
-    }).catch(err => {
-      console.log('err: ', err);
-    });
+  async function saveNewRoom (url) {
+    try {
+      await fetch(url, { method: 'POST' });
+    } catch (err) {
+      console.log('post room failed');  // TODO - what UX do we want here
+    }
   }
 
   function showAddForm () {
