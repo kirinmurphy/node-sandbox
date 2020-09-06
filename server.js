@@ -21,7 +21,6 @@ app.use('/posts', posts);
 
 app.use(express.static(path.join(__dirname, './app/public')));
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 const successMessage = `Server running on port ${PORT}`;
 server.listen(PORT, () => console.log(successMessage));
-
