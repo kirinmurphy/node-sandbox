@@ -6,9 +6,12 @@
 //   database: 'localNodePracticeDb'
 // };
 
+const DATABASE_URL = process.env.DATABASE_URL || null;
+const trimmedUrl = DATABASE_URL.replace('mysql://','').replace('?reconnect=true','');
+
 module.exports = {
-  host: 'us-cdbr-east-02.cleardb.com',
-  user: 'b0397e66ea3362',
-  password: 'b0c74df0',
-  database: 'heroku_4eca7cc07ac01c1'
+  user: trimmedUrl.split(':')[0],
+  password: trimmedUrl.split(':')[1].split('@')[0],
+  host: trimmedUrl.split('@')[1].split('/')[0],
+  database: trimmedUrl.split('/')[1]
 }

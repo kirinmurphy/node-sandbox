@@ -6,7 +6,7 @@ My node.js playground to work with some new stuff.  So far includes:
 - a socket.io chat server with messsages saved to a mongoDb instance (using MongoDB Atlas)
 - a contrived JWT proof of concept
 - vanilla es6-ified javascript on the client (not bad in 2020)
-- deployed to Heroku
+- deployed on Heroku
 
 ### Helpful Links    
 [Traversy Media - MySQL & Node](https://youtu.be/EN6Dx22cPRI)   
@@ -15,3 +15,6 @@ My node.js playground to work with some new stuff.  So far includes:
 [Traversy Media - SocketID & Node](https://youtu.be/jD7FnbI76Hg)   
 [Deploy node with mysql on heroku](https://bezkoder.com/deploy-node-js-app-heroku-cleardb-mysql/)   
 [Mongo + Heroku](https://stackoverflow.com/questions/42159175/connecting-heroku-app-to-atlas-mongodb-cloud-service)    
+
+https://devcenter.heroku.com/articles/config-vars
+whitelist specific ip's from aws - https://docs.aws.amazon.com/general/latest/gr/aws-ip-ranges.html
