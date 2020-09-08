@@ -1,9 +1,10 @@
 https://codethings-node-stuff.herokuapp.com/
 
-### Full Stack Fake Slack
+### Node Sandbox
 My node.js playground to work with some new stuff.  So far includes:  
 - a rest api for creating chat rooms saved to a mySQL instance 
 - a socket.io chat server with messsages saved to a mongoDb instance (using MongoDB Atlas)
+- a nightly job to delete all of the day's chats
 - a contrived JWT proof of concept
 - vanilla es6-ified javascript on the client (not bad in 2020)
 - deployed on Heroku

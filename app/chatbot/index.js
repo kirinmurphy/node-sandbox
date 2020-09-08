@@ -1,4 +1,5 @@
 const socketio = require('socket.io');
+const cron = require('node-cron');
 
 const { 
   databaseName,
@@ -45,10 +46,15 @@ module.exports = function (server) {
       });
     
       socket.on('disconnect', () => leaveRoom(io, socket.id));
-  
+        
       socket.on('clear', (data) => {
-        collection.remove({}, () => socket.emit('cleared'));
+        collection.deleteMany({}, () => socket.emit('cleared'));
       });
-    });    
+    });   
+
+    cron.schedule('0 0 23 * * *', async () => {
+      await collection.deleteMany({});
+      console.log('all chats deleted!');
+    });
   });
 };
