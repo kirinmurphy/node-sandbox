@@ -11,8 +11,9 @@ const chatbotCopy = {
   leftChat: username => formatMessage(MSG_BOT_NAME, `${username} has left the chat`)
 };
 
-function updateRoomState (io, room) {
-  const roomState = { room, users: getRoomUsers(room) };
+async function updateRoomState (io, room) {
+  const users = await getRoomUsers(room);
+  const roomState = { room, users };
   io.to(room).emit('roomUsers', roomState);
 }
 

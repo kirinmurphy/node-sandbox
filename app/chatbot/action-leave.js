@@ -9,8 +9,8 @@ const {
   removeFromUsersCollection
 } = require('./users');
 
-function leaveRoom (io, socketId) {
-  const user = getCurrentUser(socketId);
+async function leaveRoom (io, socketId) {
+  const user = await getCurrentUser(socketId);
   if ( user ) {
     removeFromUsersCollection(user);
     io.to(user.room).emit(SOCKET_EVENT_MESSAGE, chatbotCopy.leftChat(user.username));

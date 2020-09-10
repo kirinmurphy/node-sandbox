@@ -1,3 +1,7 @@
+REDIS
+- run redis locally in the background
+- product redis instance? 
+
 - mongo db whitelisted addresses on mongodb atlas
 - clear add form messages
 - index a collection

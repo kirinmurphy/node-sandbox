@@ -6,7 +6,7 @@ const {
 } = require('./helpers');
 
 async function sendMessage (io, socket, text, collection) {
-  const { username, room } = getCurrentUser(socket.id);
+  const { username, room } = await getCurrentUser(socket.id);
 
   const document = { ...formatMessage(username, text), room };
 
