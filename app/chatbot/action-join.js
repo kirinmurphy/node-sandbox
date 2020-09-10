@@ -8,14 +8,14 @@ const {
   addToUsersCollection
 } = require('./users');
 
-function joinRoom (io, socket, user) {
+async function joinRoom (io, socket, user) {
   const { username, room } = user;
 
   socket.join(room);
 
   socket.broadcast.to(room).emit(SOCKET_EVENT_MESSAGE, chatbotCopy.newUserAdded(username)); 
 
-  addToUsersCollection(socket.id, user);
+  await addToUsersCollection(socket.id, user);
 
   updateRoomState(io, room);
 

@@ -10,11 +10,13 @@ const {
 } = require('./users');
 
 async function leaveRoom (io, socketId) {
-  const user = await getCurrentUser(socketId);
-  if ( user ) {
-    removeFromUsersCollection(user);
+  try {
+    const user = await getCurrentUser(socketId);
+    await removeFromUsersCollection(user);
     io.to(user.room).emit(SOCKET_EVENT_MESSAGE, chatbotCopy.leftChat(user.username));
-    updateRoomState(io, user.room);
+    updateRoomState(io, user.room);  
+  } catch (err) {
+    console.log('error leaving room...');
   }
 };
 

@@ -1,4 +1,6 @@
 REDIS
+- do we gotta strigify/parse the JSON
+- needs to be cleared every time server restarts
 - run redis locally in the background
 - product redis instance? 
 
