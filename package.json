@@ -10,17 +10,18 @@
   "author": "Balls",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^8.2.0",
+    "dotenv": "^16.4.5",
     "express": "^4.17.1",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.2",
     "moment": "^2.27.0",
-    "mongodb": "^3.6.1",
+    "mongodb": "^6.7.0",
     "mysql": "^2.18.1",
-    "node-cron": "^2.0.3",
-    "socket.io": "^2.3.0",
-    "uuid": "^8.3.0"
+    "mysql2": "^3.10.0",
+    "node-cron": "^3.0.3",
+    "socket.io": "^4.7.5",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.4"
+    "nodemon": "^3.1.2"
   }
 }

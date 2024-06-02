@@ -1,18 +1,29 @@
-const MongoClient = require('mongodb').MongoClient;
+require('dotenv').config();
+const { MongoClient } = require('mongodb');
 
-const MONGODB_URL = `${process.env.MONGODB_URL}?retryWrites=true&w=majority`;
+const MONGODB_URL = process.env.MONGODB_URL;
 
-const databaseName = MONGODB_URL.replace('mongodb+srv://','')
-  .split('/')[1].split('?')[0];
+const client = new MongoClient(MONGODB_URL, {
+    // useNewUrlParser: true,  // Can be removed if deprecated
+    // useUnifiedTopology: true,  // Can be removed if deprecated
+    tls: true,
+    tlsAllowInvalidCertificates: true,  // Only for development; remove in production
+});
 
-// TODO - ??? should there be one mongo client instance used everwhere
-// or should each use have it's own mongo client?
-const mongoClient = new MongoClient(MONGODB_URL, { 
-  useNewUrlParser: true, 
-  useUnifiedTopology: true 
-})
+async function connectToMongo() {
+    try {
+        await client.connect();
+        console.log("Connected to MongoDB");
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+connectToMongo();
+
+const databaseName = MONGODB_URL.split('/').pop().split('?')[0];
 
 module.exports = {
-  databaseName,
-  mongoClient
+    mongoClient: client,
+    databaseName
 };
