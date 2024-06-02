@@ -1,4 +1,4 @@
-const mysql = require('mysql');
+const mysql = require('mysql2');
 
 const DATABASE_URL = process.env.DATABASE_URL || null;
 const trimmedDbUrl = DATABASE_URL.replace('mysql://','').replace('?reconnect=true','');
