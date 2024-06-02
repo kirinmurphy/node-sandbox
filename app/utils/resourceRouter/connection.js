@@ -1,25 +1,32 @@
 const mysql = require('mysql2');
+require('dotenv').config();
 
-const DATABASE_URL = process.env.DATABASE_URL || null;
+const { DATABASE_URL } = process.env;
+
+if (!DATABASE_URL) {
+  throw new Error('DATABASE_URL environment variable is not set');
+}
+
 const trimmedDbUrl = DATABASE_URL.replace('mysql://','').replace('?reconnect=true','');
+const [auth, hostAndDb] = trimmedDbUrl.split('@');
+const [username, password] = auth.split(':');
+const [host, database] = hostAndDb.split('/');
 
 const dbConnection = mysql.createPool({
-  user: trimmedDbUrl.split(':')[0],
-  password: trimmedDbUrl.split(':')[1].split('@')[0],
-  host: trimmedDbUrl.split('@')[1].split('/')[0],
-  database: trimmedDbUrl.split('/')[1],
+  host: host,
+  user: username,
+  password: password,
+  database: database,
   connectionLimit: 10
 });
 
-dbConnection.on('connection', function (connection) {
-  console.log('mySql connected...');
-
-  connection.on('error', function (err) {
-    console.error(new Date(), 'MySQL error', err.code);
-  });
-  connection.on('close', function (err) {
-    console.error(new Date(), 'MySQL close', err);
-  });
+dbConnection.getConnection((err, connection) => {
+  if (err) {
+    console.error('Error connecting to the database:', err);
+    return;
+  }
+  console.log('Connected to the MySQL server.');
+  connection.release(); // release the connection back to the pool
 });
 
 module.exports = dbConnection;
