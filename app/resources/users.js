@@ -13,6 +13,7 @@ router.post('/signup', async (req, res) => {
 
   const query = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
   connection.query(query, [username, email, hashedPassword], (err, results) => {
+    console.log('ERRRRR', err, results);
     if (err) {
       res.json({ success: false, message: 'Signup failed.' });
     } else {
