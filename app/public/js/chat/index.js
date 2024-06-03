@@ -3,7 +3,7 @@ import { fetchRoomDetails } from './fetchRoomDetails.js';
 (function () {
   const elements = {
     chatForm: document.getElementById('chat-form'),
-    chatMessages: document.querySelector('.chat-messages'),
+    chatScrollWrapper: document.querySelector('.chat-scroll-wrapper'),
     roomName: document.getElementById('room-name'),
     userList: document.getElementById('users'),
     chatCurrent: document.querySelector('.chat-current'),
@@ -105,6 +105,6 @@ import { fetchRoomDetails } from './fetchRoomDetails.js';
   }
 
   function scrollToEndOfChat() {
-    elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+    elements.chatScrollWrapper.scrollTop = elements.chatScrollWrapper.scrollHeight;
   }
 })();

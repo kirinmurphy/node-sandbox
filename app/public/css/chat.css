@@ -61,12 +61,19 @@
 }
 
 /* -- MESSAGES -------------------------- */
+.chat-scroll-wrapper {
+	flex: 1; 
+  overflow-y: scroll; 
+  display: flex;
+  flex-direction: column;
+}
+
 .chat-messages {
 	display: flex; 
 	flex-direction: column;
 	justify-content: flex-end;
 	padding: 1rem;
-	overflow-y: scroll;
+	flex: 1 1 auto;
 	background: #fff;
 }
 
