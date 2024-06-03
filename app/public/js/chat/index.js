@@ -10,22 +10,32 @@ import { fetchRoomDetails } from './fetchRoomDetails.js';
     chatHistory: document.querySelector('.chat-history')
   };
 
-  const { username, room: roomId } = Qs.parse(location.search, {
-    ignoreQueryPrefix: true
-  });
+  const params = Qs.parse(location.search, { ignoreQueryPrefix: true });
+  const { username: currentUserName, room: roomId } = params;  
 
   const socket = io();
 
-  initChat();
+//   let usernamee = null;
+  document.addEventListener('user-data', (event) => {
+    const username = event.detail.username;
+    if ( username ) {
+      document.getElementById('leave-room').setAttribute(href, '/home');
+    }
+  });
 
-  async function initChat() {
+  initChat({ currentUserName, roomId });
+
+  async function initChat({ currentUserName, roomId }) {
     try {
+
       const roomData = await fetchRoomDetails(roomId);
       const roomName = roomData.name;
       elements.roomName.innerText = roomName;
 
+
+
       // Join room with room name
-      socket.emit('joinRoom', { username, room: roomName });
+      socket.emit('joinRoom', { username: currentUserName, room: roomName });
 
       socket.on('roomUsers', ({ room, users }) => {
         outputRoomName(room);
@@ -33,12 +43,18 @@ import { fetchRoomDetails } from './fetchRoomDetails.js';
       });
 
       socket.on('getHistory', messages => {
-        messages.forEach(message => outputMessage(elements.chatHistory, message));
+        messages.forEach(message => { 
+          const container = elements.chatHistory;
+          outputMessage({ container, message, currentUserName });
+        });
+        
+        // TODO: end loading if need loading indicator
         scrollToEndOfChat();
       });
 
       socket.on('message', message => {
-        outputMessage(elements.chatCurrent, message);
+        const container = elements.chatCurrent;
+        outputMessage({ container, message, currentUserName });
         scrollToEndOfChat();
       });
 
@@ -59,17 +75,21 @@ import { fetchRoomDetails } from './fetchRoomDetails.js';
   }
 
   // HELPERS
-  function outputMessage(container, message) {
-    const messagesHtml = getMessageTemplate(message);
+  function outputMessage ({ container, message, currentUserName }) {
+    const messagesHtml = getMessageTemplate({ message, currentUserName });
     container.appendChild(messagesHtml);
   }
 
-  function getMessageTemplate({ username, time = '???', text }) {
+  function getMessageTemplate({ message, currentUserName }) {
+    const { username, time = '???', text } = message;
+    const isFromCurrentUser = currentUserName === username;
     const div = document.createElement('div');
-    div.classList.add('message');
+    div.classList.add(`message`);
+    if ( isFromCurrentUser ) div.classList.add(`me`); 
+
     div.innerHTML = `
-      <p class="meta">${username} <span>${time}</span></p>
-      <p class="text">${text}</p>
+      <div class="meta">${username} <span>${time}</span></div>
+      <div class="text">${text}</div>
     `;
     return div;
   }
