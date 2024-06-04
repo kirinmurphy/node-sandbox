@@ -15,28 +15,40 @@ require('./app/chatbot')(server);
 app.use(express.json());
 app.use(cookieParser());
 
+const initializeDatabase = async () => {
+  const userResource = require('./app/resources/users');
+  const chatRoomsResource = require('./app/resources/chatRooms');
+  // Ensure any necessary async initialization is done here
+  // For example, create tables if they don't exist
+  await userResource.initialize();
+  await chatRoomsResource.initialize();
+};
 
-// --- AUTHENTICTED ROUTES ------------ //
+// --- AUTHENTICTED ROUTES/PAGES ------------ //
 // Endpoint to verify token
 app.post('/verify-token', verifyToken, (req, res) => {
   res.sendStatus(200);
 });
 
 // Endpoint to get current user info
-app.get('/api/users/me', verifyToken, (req, res) => {
+app.get('/api/users/me', verifyToken, async (req, res) => {
   const userId = req.authData.id;
   const query = 'SELECT username FROM users WHERE id = ?';
-  connection.query(query, [userId], (err, results) => {
-    if (err || results.length === 0) {
-      res.sendStatus(404);
+
+  try {
+    const [results] = await connection.promise().query(query, [userId]);
+    if (results.length === 0) {
+      return res.sendStatus(404);
     } else {
-      res.json({ username: results[0].username });
+      return res.json({ username: results[0].username });
     }
-  });
+  } catch (err) {
+    return res.sendStatus(500);
+  }
 });
 
 app.get('/home', verifyToken, (req, res) => {
-  res.sendFile(path.join(__dirname, './app/public/home.html'));
+  return res.sendFile(path.join(__dirname, './app/public/home.html'));
 });
 
 // --- PUBLIC PAGES ------------ //
@@ -48,22 +60,34 @@ const publicPaths = [
 
 publicPaths.forEach(({ url, file }) => {
   app.get(url, redirectIfAuthenticated, (req, res) => {
-    res.sendFile(path.join(__dirname, `./app/public/${file}`));
+    return res.sendFile(path.join(__dirname, `./app/public/${file}`));
   });
 });
 
-app.use('/jwt', require('./app/jwt_demo'));
 
-app.use('/api/chatRooms', require('./app/resources/chatRooms'));
 
-app.use('/posts', require('./app/resources/posts'));
+// --- APIS ------------ //
+// app.use('/api/chatRooms', require('./app/resources/chatRooms'));
 
-app.use('/api/users', require('./app/resources/users'));
+// app.use('/api/users', require('./app/resources/users'));
+
+// app.use('/posts', require('./app/resources/posts'));
+
+
+
+// app.use('/jwt', require('./app/jwt_demo'));
 
 app.use(express.static(path.join(__dirname, './app/public')));
 
 app.get('*', (req, res) => { res.redirect('/'); });
 
-const PORT = process.env.PORT;
-const successMessage = `Server running on port ${PORT}`;
-server.listen(PORT, () => console.log(successMessage));
+initializeDatabase().then(() => {
+  server.listen(PORT, () => {
+    const PORT = process.env.PORT;
+    const successMessage = `Server running on port ${PORT}`;
+    server.listen(PORT, () => console.log(successMessage));
+  });
+}).catch(err => {
+  console.error('Failed to initialize database:', err);
+});
+
