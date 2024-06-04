@@ -1,4 +1,4 @@
-const app = require('express');
+const express = require('express');
 
 const { getSql, makeQuery } = require('./helpers');
 
@@ -7,12 +7,12 @@ const { getCollection, getOne } = require('./crudder-read');
 const { updateOne } = require('./crudder-update');
 const { deleteOne, deleteAll } = require('./crudder-delete');
 
-module.exports = function (props) {
-  const router = app.Router();
+module.exports = async function (props) {
+  const router = express.Router();
 
   const sql = getSql(props);
   
-  makeQuery([sql.createTable])
+  await makeQuery([sql.createTable])
     .catch((err) => { console.log('create table??', err); });
 
   router.use((req, res, next) => {

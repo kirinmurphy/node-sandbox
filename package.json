@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server",
-    "dev": "nodemon server"
+    "dev": "nodemon server",
+    "migrate": "node runMigration.js",
+    "build-and-migrate": "yarn --frozen-lockfile install && yarn run migrate"
   },
   "author": "Balls",
   "license": "ISC",

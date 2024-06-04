@@ -15,7 +15,7 @@ function getSql ({ tableName, tableColumns }) {
   };
 }
 
-function makeQuery (props, res = null) {
+async function makeQuery (props, res = null) {
   return new Promise ((resolve, reject) => {
     connection.query(...props, (err, result) => {
       if ( !err ) { return resolve(result); }
