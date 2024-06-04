@@ -17,13 +17,13 @@ router.post('/signup', async (req, res) => {
   connection.query(query, [username, email, hashedPassword], (err, results) => {
     console.log('ERRRRR', err, results);
     if (err) {
-      res.json({ success: false, message: 'Signup failed.' });
+      return res.json({ success: false, message: 'Signup failed.' });
     } else {
       // Generate JWT token
       const token = jwt.sign({ id: results.insertId }, 'secretKey', { expiresIn: '1h' });
       // Set HTTP-only cookie
       res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
-      res.json({ success: true });
+      return res.json({ success: true });
     }
   });
 });
@@ -35,7 +35,7 @@ router.post('/login', (req, res) => {
   const query = 'SELECT * FROM users WHERE email = ? OR username = ?';
   connection.query(query, [emailOrUsername, emailOrUsername], async (err, results) => {
     if (err || results.length === 0) {
-      res.json({ success: false, message: 'Login failed.' });
+      return res.json({ success: false, message: 'Login failed.' });
     } else {
       const user = results[0];
       const isMatch = await bcrypt.compare(password, user.password);
@@ -43,9 +43,9 @@ router.post('/login', (req, res) => {
         const token = jwt.sign({ id: user.id }, 'secretKey', { expiresIn: '1h' });
         // Set HTTP-only cookie
         res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
-        res.json({ success: true });
+        return res.json({ success: true });
       } else {
-        res.json({ success: false, message: 'Login failed.' });
+        return res.json({ success: false, message: 'Login failed.' });
       }
     }
   });
@@ -54,7 +54,7 @@ router.post('/login', (req, res) => {
 // Logout endpoint
 router.post('/logout', (req, res) => {
   res.clearCookie('token');
-  res.json({ success: true });
+  return res.json({ success: true });
 });
 
 

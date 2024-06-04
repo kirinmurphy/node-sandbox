@@ -3,7 +3,7 @@ const { makeQuery } = require('./helpers');
 async function getCollection (req, res) {
   const { sql } = req;
   const results = await makeQuery([sql.getCollection], res);
-  res.json({ collection: results });
+  return res.json({ collection: results });
 }
 
 async function getOne (req, res) {
@@ -15,9 +15,9 @@ async function getOne (req, res) {
   const result = await makeQuery([sql.getEntry(id)], res);
 
   if ( result.length ) { 
-    res.json(result[0]); 
+    return res.json(result[0]); 
   } else { 
-    res.status(404).send(`Id ${id} doesn't exist`); 
+    return res.status(404).send(`Id ${id} doesn't exist`); 
   } 
 }
 

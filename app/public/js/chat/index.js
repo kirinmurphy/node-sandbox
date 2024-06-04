@@ -15,7 +15,6 @@ import { fetchRoomDetails } from './fetchRoomDetails.js';
 
   const socket = io();
 
-//   let usernamee = null;
   document.addEventListener('user-data', (event) => {
     const username = event.detail.username;
     if ( username ) {
