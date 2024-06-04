@@ -22,13 +22,13 @@ async function addOne (req, res) {
     const cleanedQuery = getCleanedQuery(matchingFields, query);
     const { insertId } = await makeQuery([sql.insertEntry, cleanedQuery], res);
 
-    res.json({ id: insertId, ...cleanedQuery });   
+    return res.json({ id: insertId, ...cleanedQuery });   
 
   } else {
     const missingFields = requiredFields.filter(column => !query[column]);
     const msg = `the following fields are missing: ${missingFields.join(', ')}`;
 
-    res.status(400).send(msg); 
+    return res.status(400).send(msg); 
   }
 }
 

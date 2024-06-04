@@ -20,12 +20,12 @@ async function updateOne (req, res) {
     const { affectedRows } = await makeQuery([sql.updateEntry(id, cleanedQuery)], res);
 
     if ( affectedRows ) { 
-      res.json({ id, ...cleanedQuery }); 
+      return res.json({ id, ...cleanedQuery }); 
     } else { 
-      res.status(404).send(`${tableName} Id: ${id} not found`); 
+      return res.status(404).send(`${tableName} Id: ${id} not found`); 
     }
   } else {
-    res.status(400).send(`No params to update`);
+    return res.status(400).send(`No params to update`);
   }  
 }
 
