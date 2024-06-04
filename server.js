@@ -28,15 +28,15 @@ app.get('/api/users/me', verifyToken, (req, res) => {
   const query = 'SELECT username FROM users WHERE id = ?';
   connection.query(query, [userId], (err, results) => {
     if (err || results.length === 0) {
-      res.sendStatus(404);
+      return res.sendStatus(404);
     } else {
-      res.json({ username: results[0].username });
+      return res.json({ username: results[0].username });
     }
   });
 });
 
 app.get('/home', verifyToken, (req, res) => {
-  res.sendFile(path.join(__dirname, './app/public/home.html'));
+  return res.sendFile(path.join(__dirname, './app/public/home.html'));
 });
 
 // --- PUBLIC PAGES ------------ //
@@ -48,7 +48,7 @@ const publicPaths = [
 
 publicPaths.forEach(({ url, file }) => {
   app.get(url, redirectIfAuthenticated, (req, res) => {
-    res.sendFile(path.join(__dirname, `./app/public/${file}`));
+    return res.sendFile(path.join(__dirname, `./app/public/${file}`));
   });
 });
 

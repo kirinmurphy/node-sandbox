@@ -1,4 +1,4 @@
-const app = require('express');
+const express = require('express');
 
 const { getSql, makeQuery } = require('./helpers');
 
@@ -8,7 +8,7 @@ const { updateOne } = require('./crudder-update');
 const { deleteOne, deleteAll } = require('./crudder-delete');
 
 module.exports = function (props) {
-  const router = app.Router();
+  const router = express.Router();
 
   const sql = getSql(props);
   
