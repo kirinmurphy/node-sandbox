@@ -36,7 +36,7 @@ app.get('/api/users/me', verifyToken, async (req, res) => {
   const query = 'SELECT username FROM users WHERE id = ?';
 
   try {
-    const [results] = await connection.promise().query(query, [userId]);
+    const [results] = await connection.query(query, [userId]);
     if (results.length === 0) {
       return res.sendStatus(404);
     } else {
@@ -67,9 +67,9 @@ publicPaths.forEach(({ url, file }) => {
 
 
 // --- APIS ------------ //
-// app.use('/api/chatRooms', require('./app/resources/chatRooms'));
+app.use('/api/chatRooms', require('./app/resources/chatRooms'));
 
-// app.use('/api/users', require('./app/resources/users'));
+app.use('/api/users', require('./app/resources/users'));
 
 // app.use('/posts', require('./app/resources/posts'));
 
