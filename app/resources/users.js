@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const connection = require('../utils/resourceRouter/connection');
 
-const userRouter = resourceRouter({
+const userResource = resourceRouter({
   tableName: 'users',
   tableColumns: `(
     id INT AUTO_INCREMENT,
@@ -19,8 +19,7 @@ const userRouter = resourceRouter({
   optionalFields: ['created_at', 'updated_at']
 });
 
-// Signup endpoint
-userRouter.post('/signup', async (req, res) => {
+userResource.post('/signup', async (req, res) => {
   const { username, email, password } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -37,7 +36,7 @@ userRouter.post('/signup', async (req, res) => {
 });
 
 // Login endpoint
-userRouter.post('/login', async (req, res) => {
+userResource.post('/login', async (req, res) => {
   const { emailOrUsername, password } = req.body;
 
   const query = 'SELECT * FROM users WHERE email = ? OR username = ?';
@@ -63,10 +62,9 @@ userRouter.post('/login', async (req, res) => {
 });
 
 // Logout endpoint
-userRouter.post('/logout', (req, res) => {
+userResource.post('/logout', (req, res) => {
   res.clearCookie('token');
   return res.json({ success: true });
 });
 
-
-module.exports = userRouter;
+module.exports = userResource;
