@@ -1,11 +1,13 @@
+require('dotenv').config();
+
 const path = require('path');
 const http = require('http');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const connection = require('./app/utils/resourceRouter/connection');
 const { verifyToken, redirectIfAuthenticated } = require('./app/middlewares/auth');
-
-require('dotenv').config();
+const resourceConfig = require('./app/resources/_resourceConfig'); 
+const { initializeTable, createResourceRouter } = require('./app/utils/resourceRouter');
 
 const app = express();
 const server = http.createServer(app);
@@ -15,14 +17,27 @@ require('./app/chatbot')(server);
 app.use(express.json());
 app.use(cookieParser());
 
-const initializeDatabase = async () => {
-  const userResource = require('./app/resources/users');
-  const chatRoomsResource = require('./app/resources/chatRooms');
-  // Ensure any necessary async initialization is done here
-  // For example, create tables if they don't exist
-  await userResource.initialize();
-  await chatRoomsResource.initialize();
-};
+async function initializeResources() {
+  for (const resource of resourceConfig) {
+    await initializeTable(resource.props);
+  }
+}
+
+initializeResources().then(() => {
+  for (const resource of resourceConfig) {
+    const { props, customRoutes } = resource;
+    app.use(resource.endpoint, createResourceRouter(props, customRoutes));
+  }
+
+  const PORT = process.env.PORT;
+  server.listen(PORT, () => {
+    const successMessage = `Server running on port ${PORT}`;
+    console.log(successMessage);
+  });
+
+}).catch(err => {
+  console.error('Failed to initialize resources:', err);
+});
 
 // --- AUTHENTICTED ROUTES/PAGES ------------ //
 // Endpoint to verify token
@@ -65,29 +80,8 @@ publicPaths.forEach(({ url, file }) => {
 });
 
 
-
-// --- APIS ------------ //
-app.use('/api/chatRooms', require('./app/resources/chatRooms'));
-
-app.use('/api/users', require('./app/resources/users'));
-
-// app.use('/posts', require('./app/resources/posts'));
-
-
-
 // app.use('/jwt', require('./app/jwt_demo'));
 
 app.use(express.static(path.join(__dirname, './app/public')));
 
 app.get('*', (req, res) => { res.redirect('/'); });
-
-initializeDatabase().then(() => {
-  server.listen(PORT, () => {
-    const PORT = process.env.PORT;
-    const successMessage = `Server running on port ${PORT}`;
-    server.listen(PORT, () => console.log(successMessage));
-  });
-}).catch(err => {
-  console.error('Failed to initialize database:', err);
-});
-

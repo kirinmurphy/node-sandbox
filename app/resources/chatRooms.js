@@ -1,6 +1,4 @@
-const resourceRouter = require('../utils/resourceRouter');
-
-const props = {
+const chatRoomResourceProps = {
   tableName: 'chat_rooms',
   tableColumns: `(
     id int AUTO_INCREMENT,
@@ -12,4 +10,6 @@ const props = {
   optionalFields: ['description']
 };
 
-module.exports = resourceRouter(props);
+module.exports = {
+  chatRoomResourceProps
+}

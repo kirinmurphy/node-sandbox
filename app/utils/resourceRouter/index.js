@@ -7,13 +7,14 @@ const { getCollection, getOne } = require('./crudder-read');
 const { updateOne } = require('./crudder-update');
 const { deleteOne, deleteAll } = require('./crudder-delete');
 
-module.exports = async function (props) {
-  const router = express.Router();
-
+async function initializeTable(props) {
   const sql = getSql(props);
-  
   await makeQuery([sql.createTable])
     .catch((err) => { console.log('create table??', err); });
+}
+
+function createResourceRouter (props, customRoutes = []) {
+  const router = express.Router();
 
   router.use((req, res, next) => {
     const { requiredFields, optionalFields = [], tableName } = props;
@@ -36,5 +37,12 @@ module.exports = async function (props) {
   
   router.delete('/', deleteAll);
 
+  customRoutes.forEach(route => {
+    router[route.method](route.path, route.handler);
+  });
+
   return router;
 };
+
+module.exports = { initializeTable, createResourceRouter };
+ 
