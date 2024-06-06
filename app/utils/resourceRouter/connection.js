@@ -1,4 +1,4 @@
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 require('dotenv').config();
 
 const { DATABASE_URL } = process.env;
@@ -20,13 +20,18 @@ const dbConnection = mysql.createPool({
   connectionLimit: 10
 });
 
-dbConnection.getConnection((err, connection) => {
-  if (err) {
+// const dbConnection = mysql.createPool({
+//   uri: DATABASE_URL,
+//   connectionLimit: 10
+// });
+
+dbConnection.getConnection()
+  .then(connection => {
+    console.log('Connected to the MySQL server.');
+    connection.release(); // release the connection back to the pool  
+  })
+  .catch(err => {
     console.error('Error connecting to the database:', err);
-    return;
-  }
-  console.log('Connected to the MySQL server.');
-  connection.release(); // release the connection back to the pool
-});
+  });
 
 module.exports = dbConnection;

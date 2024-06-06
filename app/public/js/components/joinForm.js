@@ -143,10 +143,13 @@ class JoinFormComponent extends HTMLElement {
     try {
       const response = await fetch('/api/chatRooms');
       const { collection } = await response.json();
-      const template = ({ id, name }) => `<option value=${id}>${name}</option>`;
+      console.log('collection', collection);
+      const template = ({ id, name }) => {
+        return `<option value=${id}>${name}</option>` 
+      };
       this.roomSelector.innerHTML = collection.map(template).join('');
     } catch (err) {
-      console.log('get rooms failed'); // TODO - what UX do we want here
+      console.log('get rooms failed', err); // TODO - what UX do we want here
     }
   }
 
@@ -155,7 +158,6 @@ class JoinFormComponent extends HTMLElement {
     if (isAuthenticated) {
       const usernameInput = this.shadowRoot.getElementById('hidden-username');
       usernameInput.value = username;
-      console.log('USERNAME', username);
     }
   }  
 

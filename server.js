@@ -24,64 +24,65 @@ async function initializeResources() {
 }
 
 initializeResources().then(() => {
+  // --- API ROUTES ------------ //
   for (const resource of resourceConfig) {
     const { props, customRoutes } = resource;
     app.use(resource.endpoint, createResourceRouter(props, customRoutes));
   }
 
-  const PORT = process.env.PORT;
-  server.listen(PORT, () => {
-    const successMessage = `Server running on port ${PORT}`;
-    console.log(successMessage);
+  // --- AUTHENTICTED ROUTES/PAGES ------------ //
+  // Endpoint to verify token
+  app.post('/verify-token', verifyToken, (req, res) => {
+    res.sendStatus(200);
   });
 
+  // get current user info
+  app.get('/api/users/me', verifyToken, async (req, res) => {
+    const userId = req.authData.id;
+    const query = 'SELECT username FROM users WHERE id = ?';
+
+    try {
+      console.log('userID', userId);
+      const [results] = await connection.query(query, [userId]);
+      console.log('!!!!!! results', results);
+      if (results.length === 0) {
+        return res.sendStatus(404);
+      } else {
+        return res.json({ username: results[0].username });
+      }
+    } catch (err) {
+      return res.sendStatus(500);
+    }
+  });
+
+  app.get('/home', verifyToken, (req, res) => {
+    return res.sendFile(path.join(__dirname, './app/public/home.html'));
+  });
+
+  // --- PUBLIC PAGES ------------ //
+  const publicPaths = [
+    { url: '/', file: 'index.html' },
+    { url: '/login', file: 'login.html' },
+    { url: '/signup', file: 'signup.html' }
+  ];
+
+  publicPaths.forEach(({ url, file }) => {
+    app.get(url, redirectIfAuthenticated, (req, res) => {
+      return res.sendFile(path.join(__dirname, `./app/public/${file}`));
+    });
+  });
+
+  // app.use('/jwt', require('./app/jwt_demo'));
+
+  app.use(express.static(path.join(__dirname, './app/public')));
+
+  app.get('*', (req, res) => { res.redirect('/'); });
+
+  const PORT = process.env.PORT;
+  server.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
 }).catch(err => {
   console.error('Failed to initialize resources:', err);
 });
 
-// --- AUTHENTICTED ROUTES/PAGES ------------ //
-// Endpoint to verify token
-app.post('/verify-token', verifyToken, (req, res) => {
-  res.sendStatus(200);
-});
-
-// Endpoint to get current user info
-app.get('/api/users/me', verifyToken, async (req, res) => {
-  const userId = req.authData.id;
-  const query = 'SELECT username FROM users WHERE id = ?';
-
-  try {
-    const [results] = await connection.query(query, [userId]);
-    if (results.length === 0) {
-      return res.sendStatus(404);
-    } else {
-      return res.json({ username: results[0].username });
-    }
-  } catch (err) {
-    return res.sendStatus(500);
-  }
-});
-
-app.get('/home', verifyToken, (req, res) => {
-  return res.sendFile(path.join(__dirname, './app/public/home.html'));
-});
-
-// --- PUBLIC PAGES ------------ //
-const publicPaths = [
-  { url: '/', file: 'index.html' },
-  { url: '/login', file: 'login.html' },
-  { url: '/signup', file: 'signup.html' }
-];
-
-publicPaths.forEach(({ url, file }) => {
-  app.get(url, redirectIfAuthenticated, (req, res) => {
-    return res.sendFile(path.join(__dirname, `./app/public/${file}`));
-  });
-});
-
-
-// app.use('/jwt', require('./app/jwt_demo'));
-
-app.use(express.static(path.join(__dirname, './app/public')));
-
-app.get('*', (req, res) => { res.redirect('/'); });

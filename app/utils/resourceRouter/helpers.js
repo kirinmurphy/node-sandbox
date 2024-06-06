@@ -15,15 +15,35 @@ function getSql ({ tableName, tableColumns }) {
   };
 }
 
-async function makeQuery (props, res = null) {
-  return new Promise ((resolve, reject) => {
-    connection.query(...props, (err, result) => {
-      if ( !err ) { return resolve(result); }
-      else if ( res ) { res.status(500).send(`Something went wrong :/`); }
-      else { return reject(err); }
-    });
-  });
-}
+
+const makeQuery = async (queries, params) => {
+  console.log('QUERIES!!!!', queries);
+  if (!Array.isArray(queries)) throw new Error('<<<<< Queries should be an array >>>>>>');
+  const results = [];
+  for (const query of queries) {
+    // console.log('query', query);
+    if (!query) throw new Error('SQL query is undefined');
+    try {
+      const [result] = await connection.query(query);
+      results.push(result);
+    } catch (err) {
+      throw err;
+    }
+  }
+  return results;
+};
+
+
+// async function makeQuery(queries) {
+//   // console.log('queries', queries);
+//   try {
+//     const [results] = await connection.query(queries[0]);
+//     console.log('<<<<<======== results', results);
+//     return results;
+//   } catch (err) {
+//     throw err;
+//   }
+// }
 
 function getMatchingFields (query, editableFields) {
   return Object.keys(query)

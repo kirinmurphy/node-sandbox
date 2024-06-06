@@ -75,6 +75,7 @@ class AuthLayout extends HTMLElement {
   }
 
   connectedCallback() {
+    // handleLogout();
     this.authControls = this.shadowRoot.querySelector('.auth-controls');
     this.checkAuthentication();
   }
@@ -130,6 +131,5 @@ function authenticate({ data, shadowRoot, dispatch, onLogout }) {
     }
   });
   
-  console.log('DISPATCHIN!');
   dispatch(new CustomEvent('user-data', { detail: { username }, bubbles: true, composed: true }));
 }

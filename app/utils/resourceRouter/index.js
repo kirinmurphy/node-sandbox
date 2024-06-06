@@ -9,12 +9,16 @@ const { deleteOne, deleteAll } = require('./crudder-delete');
 
 async function initializeTable(props) {
   const sql = getSql(props);
-  await makeQuery([sql.createTable])
-    .catch((err) => { console.log('create table??', err); });
+  try {
+    await makeQuery([sql.createTable]);
+  } catch (err) {
+    console.log('create table??', err);
+  }
 }
 
 function createResourceRouter (props, customRoutes = []) {
   const router = express.Router();
+  const sql = getSql(props);
 
   router.use((req, res, next) => {
     const { requiredFields, optionalFields = [], tableName } = props;
@@ -26,6 +30,8 @@ function createResourceRouter (props, customRoutes = []) {
   });
   
   router.post('/', addOne);
+
+  // console.log('props', props);
 
   router.get('/', getCollection);
   

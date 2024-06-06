@@ -2,7 +2,7 @@ const { makeQuery } = require('./helpers');
 
 async function getCollection (req, res) {
   const { sql } = req;
-  const results = await makeQuery([sql.getCollection], res);
+  const [results] = await makeQuery([sql.getCollection], res);
   return res.json({ collection: results });
 }
 
