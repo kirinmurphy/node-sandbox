@@ -1,22 +1,20 @@
-const { getCurrentUser } = require('./users');
+const { formatMessage, SOCKET_EVENT_MESSAGE } = require("./helpers");
+const { getCurrentUser } = require("./users");
 
-const { 
-  SOCKET_EVENT_MESSAGE, 
-  formatMessage 
-} = require('./helpers');
+async function sendMessage(props) {
+  const { io, socket, message, collection, usernameOverride } = props;
 
-async function sendMessage (io, socket, text, collection) {
   const { username, room } = getCurrentUser(socket.id);
 
-  const document = { ...formatMessage(username, text), room };
+  const senderUsername = usernameOverride || username;
+
+  const document = { ...formatMessage(senderUsername, message), room };
 
   const { insertedId } = await collection.insertOne(document);
 
   socket.emit('savedMessage', { status: 'saved', id: insertedId });
 
-  io.to(room).emit(SOCKET_EVENT_MESSAGE, formatMessage(username, text));  
+  io.to(room).emit(SOCKET_EVENT_MESSAGE, formatMessage(senderUsername, message));
 };
 
-module.exports = { 
-  sendMessage
-};
+module.exports = { sendMessage };

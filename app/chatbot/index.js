@@ -9,6 +9,7 @@ const {
 const { sendMessage } = require('./action-sendMessage');
 const { joinRoom, getHistory } = require('./action-join');
 const { leaveRoom } = require('./action-leave');
+const { initCincoBotResponse } = require('./getCincoBotResponse');
 
 const MONGO_TABLE_CHATROOM = 'chatRoom';
 const SOCKET_EVENT_JOIN_ROOM = 'joinRoom';
@@ -32,16 +33,23 @@ module.exports = function (server) {
         // TODO - what user experience do we want here 
       }
     });
-  
-    socket.on(SOCKET_EVENT_SEND_MESSAGE, async (msg) => { 
+
+    socket.on(SOCKET_EVENT_SEND_MESSAGE, async (rawMsg) => { 
+      const isAiPrompt = rawMsg && rawMsg.startsWith('@computer');
+      const messageConfig = { io, socket, collection };
+
       try {
-        sendMessage(io, socket, msg, collection);
+        sendMessage({ ...messageConfig, message: rawMsg });
+
+        if ( isAiPrompt ) {
+          await initCincoBotResponse({ ...messageConfig, message: rawMsg });
+        }
         // mongoClient.close();
       } catch (error) {
         // TODO - what user experience do we want here 
-      }
+      }    
     });
-  
+    
     socket.on('disconnect', () => leaveRoom(io, socket.id));
       
     socket.on('clear', (data) => {
@@ -54,3 +62,4 @@ module.exports = function (server) {
     console.log('all chats deleted!');
   });
 };
+
