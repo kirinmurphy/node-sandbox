@@ -35,8 +35,8 @@ module.exports = function (server) {
     });
 
     socket.on(SOCKET_EVENT_SEND_MESSAGE, async (rawMsg) => { 
-      const isAiPrompt = rawMsg && rawMsg.startsWith('@computer');
       const messageConfig = { io, socket, collection };
+      const isAiPrompt = rawMsg && rawMsg.startsWith('@computer');
 
       try {
         sendMessage({ ...messageConfig, message: rawMsg });

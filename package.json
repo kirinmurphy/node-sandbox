@@ -7,7 +7,8 @@
     "start": "node server",
     "dev": "nodemon server",
     "migrate": "node runMigration.js",
-    "build-and-migrate": "yarn --frozen-lockfile install && yarn run migrate"
+    "build-and-migrate": "yarn --frozen-lockfile install",
+    "build-and-migrate-untested": "yarn --frozen-lockfile install && yarn run migrate"
   },
   "author": "Balls",
   "license": "ISC",
