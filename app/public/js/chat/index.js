@@ -18,7 +18,7 @@ import { fetchRoomDetails } from './fetchRoomDetails.js';
   document.addEventListener('user-data', (event) => {
     const username = event.detail.username;
     if ( username ) {
-      document.getElementById('leave-room').setAttribute(href, '/home');
+      document.getElementById('leave-room').setAttribute('href', '/home');
     }
   });
 
