@@ -1,28 +1,22 @@
-const { OpenAI } = require('openai');
-const { sendMessage } = require('../action-sendMessage');
+
+
 const { CHATBOT_NAME, AI_CHAT_ROLES } = require('./constants');
 const { queryCincoBot } = require('./queryCincoBot');
 
-
 const PROMPT_SIGNAL = '@computer';
+const MAX_CHAT_HISTORY_COUNT = 20;
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-async function initCincoBotConversation ({ message, ...messageConfig }) {
-  const filteredCollection = await getFilteredBotChat(messageConfig);
+async function getCincoBotChatResponse ({ message, collection }) {
+  const filteredCollection = await getFilteredBotChatHistory({ collection });
   const messages = getChatFormattedForGPT({ filteredCollection, message });
-  const cincoBotResponse = await queryCincoBot({ openai, messages });
-  const usernameOverride = CHATBOT_NAME;
-  await sendMessage({ ...messageConfig, message: cincoBotResponse, usernameOverride });
+  return await queryCincoBot({ messages });
 }
 
-async function getFilteredBotChat ({ collection }) {
+async function getFilteredBotChatHistory ({ collection }) {
   const promptFilter = { text: { $regex: PROMPT_SIGNAL, $options: 'i' }};
   const botFilter = { username: CHATBOT_NAME };
   const query = { $or: [promptFilter, botFilter] };
-  const options = { sort: { timestamp: -1 }, limit: 20 };
+  const options = { sort: { timestamp: -1 }, limit: MAX_CHAT_HISTORY_COUNT };
   return await collection.find(query, options).toArray();
 }
 
@@ -37,4 +31,4 @@ function getChatFormattedForGPT ({ filteredCollection, message }) {
   return [...formattedFilteredCollection, userMessage];
 }
 
-module.exports = { initCincoBotConversation };
+module.exports = { getCincoBotChatResponse };

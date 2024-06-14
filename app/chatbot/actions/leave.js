@@ -2,12 +2,12 @@ const {
   SOCKET_EVENT_MESSAGE,
   chatbotCopy,
   updateRoomState
-} = require('./helpers');
+} = require('../helpers');
 
 const { 
   getCurrentUser, 
   removeFromUsersCollection
-} = require('./users');
+} = require('../users');
 
 function leaveRoom (io, socketId) {
   const user = getCurrentUser(socketId);

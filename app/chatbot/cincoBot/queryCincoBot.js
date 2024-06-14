@@ -1,8 +1,9 @@
-const { AI_MODEL_NAME } = require("./constants");
+const { AI_MODEL_NAME } = require("./constants.js");
+const { openAiClient } = require("./openAiClient.js")
 
-async function queryCincoBot ({ openai, messages }) {
+async function queryCincoBot ({ messages }) {
   try {
-    const response = await openai.chat.completions
+    const response = await openAiClient.chat.completions
       .create({ messages, model: AI_MODEL_NAME });
 
     return response?.choices[0]?.message?.content;

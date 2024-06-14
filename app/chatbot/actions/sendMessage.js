@@ -1,5 +1,5 @@
-const { formatMessage, SOCKET_EVENT_MESSAGE } = require("./helpers");
-const { getCurrentUser } = require("./users");
+const { formatMessage, SOCKET_EVENT_MESSAGE } = require("../helpers");
+const { getCurrentUser } = require("../users");
 
 async function sendMessage(props) {
   const { io, socket, message, collection, usernameOverride } = props;

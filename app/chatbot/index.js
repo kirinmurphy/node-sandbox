@@ -2,12 +2,10 @@ const socketio = require('socket.io');
 const cron = require('node-cron');
 const { databaseName, mongoClient } = require('../utils/mongoClient');
 
-const { AI_CHAT_ROLES } = require('./cincoBot/constants');
-const { initCincoBotConversation } = require('./cincoBot/initCincoBotConversation');
-
-const { sendMessage } = require('./action-sendMessage');
-const { joinRoom, getHistory } = require('./action-join');
-const { leaveRoom } = require('./action-leave');
+const { sendMessage } = require('./actions/sendMessage');
+const { joinRoom, getHistory } = require('./actions/join');
+const { leaveRoom } = require('./actions/leave');
+const { initCicoBotInteractions } = require('./initCincoBotInteractions');
 
 const MONGO_TABLE_CHATROOM = 'chatRoom';
 const SOCKET_EVENT_JOIN_ROOM = 'joinRoom';
@@ -32,20 +30,12 @@ module.exports = function (server) {
       }
     });
 
-    socket.on(SOCKET_EVENT_SEND_MESSAGE, async (rawMsg) => { 
+    socket.on(SOCKET_EVENT_SEND_MESSAGE, async (userMessage) => { 
       const messageConfig = { io, socket, collection };
-      const isAiPrompt = rawMsg && rawMsg.startsWith('@computer');
 
       try {
-        sendMessage({ ...messageConfig, message: rawMsg });
-
-        if ( isAiPrompt ) {
-          
-          await initCincoBotConversation({ ...messageConfig, message: rawMsg });
-        } else {
-          const things = await initCincoBotThingChecker({ io, socket, message: rawMsg });
-          console.log('keywords', things);
-        }
+        sendMessage({ ...messageConfig, message: userMessage });
+        initCicoBotInteractions({ ...messageConfig, userMessage });
         // mongoClient.close();
       } catch (error) {
         // TODO - what user experience do we want here 
@@ -54,7 +44,7 @@ module.exports = function (server) {
     
     socket.on('disconnect', () => leaveRoom(io, socket.id));
       
-    socket.on('clear', (data) => {
+    socket.on('clear', () => {
       collection.deleteMany({}, () => socket.emit('cleared'));
     });
   });   
@@ -64,23 +54,3 @@ module.exports = function (server) {
     console.log('all chats deleted!');
   });
 };
-
-
-async function initCincoBotThingChecker ({ io, socket, message }) {
-  const keywords = getAllCapitalizedWords({ message });
-  if ( keywords.size === 0 ) { return; }
-
-  console.log('keywords', keywords);
-  const formattedMsg = `${thingCheckerPreprompt} ${keywords}`;
-  const messages = [{ role: AI_CHAT_ROLES.user, content: formattedMsg }]; 
-  const aiResponse = await queryCincoBot({ messages }); 
-}
-
-
-function getAllCapitalizedWords ({ message }) {
-  const regex = /([A-Z][a-z]*(\s[A-Z][a-z]*)*)/g;
-  const matches = message.match(regex);
-  const dedupedSet = new Set(matches);
-  return dedupedSet;
-}
-

@@ -2,11 +2,11 @@ const {
   SOCKET_EVENT_MESSAGE,
   chatbotCopy,
   updateRoomState
-} = require('./helpers');
+} = require('../helpers');
 
 const { 
   addToUsersCollection
-} = require('./users');
+} = require('../users');
 
 function joinRoom (io, socket, user) {
   const { username, room } = user;
