@@ -4,17 +4,25 @@ const { getCincoBotKeywordBlurbs } = require('./cincoBot/getCincoBotKeywordBlurb
 
 const { CHATBOT_NAME } = require("./cincoBot/constants");
 
-async function initCicoBotInteractions ({ userMessage, ...messageConfig }) {
+async function initCicoBotInteractions ({ userMessage, saveThings, ...messageConfig }) {
   const { collection } = messageConfig;
-  const isAiPrompt = userMessage && userMessage.startsWith('@computer');
+  const messageIsAiPrompt = userMessage && userMessage.startsWith('@computer');
 
-  if ( isAiPrompt ) {
+  if ( messageIsAiPrompt ) {
     const response = await getCincoBotChatResponse({ message: userMessage, collection });
     const usernameOverride = CHATBOT_NAME;
     await sendMessage({ ...messageConfig, message: response, usernameOverride });
   } else {
-    const things = await getCincoBotKeywordBlurbs({ userMessage });
-    console.log('thinggggs', things);
+    const entities = await getCincoBotKeywordBlurbs({ userMessage });
+    try {
+      const parsedEntities = JSON.parse(entities);
+      await saveThings(parsedEntities);
+
+      console.log('parsedEntities', parsedEntities);
+
+    } catch (err) {
+      console.log('mentionedEntities was not in the correct json format');
+    }
   }
 }
 

@@ -2,7 +2,9 @@ const thingCheckerPreprompt = `I would like you to scan through this list of wor
 
 At the end of the message, can you include links to the entitys webpage and their main website (if it is a product or a brand).  The links should be printed in html form with the href link and a target blank. 
 
-Please return the data in an array of objects - like [{ entity: "Apple", fact: "Apple was founded by Steve Jobs in 1976 <a href=\"apple.com\"" target=\"_blank\">Apple.com</a> }, ...].  
+Please return the data in json format with properites "entity" and "fact" - like [{ "entity": "Apple", "fact": "Apple was founded by Steve Jobs in 1976 <a href=\"apple.com\"" target=\"_blank\">Apple.com</a>" }, ...].  
+
+Please make sure that the text is in proper JSON format including properly escaping quotes.
 
 Here are the the words: `;
 

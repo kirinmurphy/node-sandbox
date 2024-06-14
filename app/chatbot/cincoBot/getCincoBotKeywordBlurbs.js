@@ -8,7 +8,6 @@ async function getCincoBotKeywordBlurbs ({ userMessage }) {
   const keywordString = Array.from(keywords).join(', ');
   const formattedMsg = `${thingCheckerPreprompt} ${keywordString}`;
   const messages = [{ role: AI_CHAT_ROLES.user, content: formattedMsg }]; 
-  console.log('formattedMsg', formattedMsg);
   return await queryCincoBot({ messages }); 
 }
 

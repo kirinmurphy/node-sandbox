@@ -10,7 +10,7 @@ require('dotenv').config();
 const app = express();
 const server = http.createServer(app);
 
-require('./app/chatbot')(server);
+require('./app/chatbot')(server, app);
 
 app.use(express.json());
 app.use(cookieParser());

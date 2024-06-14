@@ -4,8 +4,6 @@ const { MongoClient } = require('mongodb');
 const MONGODB_URL = process.env.MONGODB_URL;
 
 const client = new MongoClient(MONGODB_URL, {
-    // useNewUrlParser: true,  // Can be removed if deprecated
-    // useUnifiedTopology: true,  // Can be removed if deprecated
     tls: true,
     tlsAllowInvalidCertificates: true,  // Only for development; remove in production
 });
