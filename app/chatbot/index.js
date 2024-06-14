@@ -1,15 +1,13 @@
 const socketio = require('socket.io');
 const cron = require('node-cron');
+const { databaseName, mongoClient } = require('../utils/mongoClient');
 
-const { 
-  databaseName,
-  mongoClient
- } = require('../utils/mongoClient');
+const { AI_CHAT_ROLES } = require('./cincoBot/constants');
+const { initCincoBotConversation } = require('./cincoBot/initCincoBotConversation');
 
 const { sendMessage } = require('./action-sendMessage');
 const { joinRoom, getHistory } = require('./action-join');
 const { leaveRoom } = require('./action-leave');
-const { initCincoBotResponse } = require('./getCincoBotResponse');
 
 const MONGO_TABLE_CHATROOM = 'chatRoom';
 const SOCKET_EVENT_JOIN_ROOM = 'joinRoom';
@@ -42,10 +40,11 @@ module.exports = function (server) {
         sendMessage({ ...messageConfig, message: rawMsg });
 
         if ( isAiPrompt ) {
-          await initCincoBotResponse({ ...messageConfig, message: rawMsg });
+          
+          await initCincoBotConversation({ ...messageConfig, message: rawMsg });
         } else {
-          const keywords = getAllCapitalizedWords({ rawMsg });
-          console.log('keywords', keywords);
+          const things = await initCincoBotThingChecker({ io, socket, message: rawMsg });
+          console.log('keywords', things);
         }
         // mongoClient.close();
       } catch (error) {
@@ -66,9 +65,22 @@ module.exports = function (server) {
   });
 };
 
-function getAllCapitalizedWords ({ rawMsg }) {
+
+async function initCincoBotThingChecker ({ io, socket, message }) {
+  const keywords = getAllCapitalizedWords({ message });
+  if ( keywords.size === 0 ) { return; }
+
+  console.log('keywords', keywords);
+  const formattedMsg = `${thingCheckerPreprompt} ${keywords}`;
+  const messages = [{ role: AI_CHAT_ROLES.user, content: formattedMsg }]; 
+  const aiResponse = await queryCincoBot({ messages }); 
+}
+
+
+function getAllCapitalizedWords ({ message }) {
   const regex = /([A-Z][a-z]*(\s[A-Z][a-z]*)*)/g;
-  const matches = rawMsg.match(regex);
+  const matches = message.match(regex);
   const dedupedSet = new Set(matches);
   return dedupedSet;
 }
+
