@@ -1,3 +1,9 @@
+- turn chat message box into a scaling textarea
+- find proper nouns in all messages and get chat responses for them in the sidebar 
+- 
+
+
+
 - mongo db whitelisted addresses on mongodb atlas
 - clear add form messages
 - index a collection
