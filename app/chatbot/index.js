@@ -43,6 +43,9 @@ module.exports = function (server) {
 
         if ( isAiPrompt ) {
           await initCincoBotResponse({ ...messageConfig, message: rawMsg });
+        } else {
+          const keywords = getAllCapitalizedWords({ rawMsg });
+          console.log('keywords', keywords);
         }
         // mongoClient.close();
       } catch (error) {
@@ -63,3 +66,9 @@ module.exports = function (server) {
   });
 };
 
+function getAllCapitalizedWords ({ rawMsg }) {
+  const regex = /([A-Z][a-z]*(\s[A-Z][a-z]*)*)/g;
+  const matches = rawMsg.match(regex);
+  const dedupedSet = new Set(matches);
+  return dedupedSet;
+}

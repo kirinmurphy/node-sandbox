@@ -1,6 +1,6 @@
 - turn chat message box into a scaling textarea
 - find proper nouns in all messages and get chat responses for them in the sidebar 
-- 
+- remove username for anonymous, users 
 
 
 
