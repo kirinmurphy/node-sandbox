@@ -31,8 +31,6 @@ import { fetchRoomDetails } from './fetchRoomDetails.js';
       const roomName = roomData.name;
       elements.roomName.innerText = roomName;
 
-
-
       // Join room with room name
       socket.emit('joinRoom', { username: currentUserName, room: roomName });
 
@@ -72,6 +70,30 @@ import { fetchRoomDetails } from './fetchRoomDetails.js';
       console.error('Initialization failed:', err);
     }
   }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    
+    const updatesDiv = document.getElementById('mentioned-entities');
+    const eventSource = new EventSource('/events');
+    console.log('YOOOOOOOOOO');
+    // eventSource.addEventListener('message', event => {
+    eventSource.onmessage = function(event) {
+
+      const data = JSON.parse(event.data);
+      console.log('DATAAA', data);
+      data.forEach(({ entity, fact }) => {
+        const div = document.createElement('div');
+        div.classList.add('mentioned-entity');
+        const template = `<strong>${entity}</strong> ${fact}`;
+        div.innerHTML = template;
+        updatesDiv.insertBefore(div, updatesDiv.firstChild);
+      });
+    }
+  
+    eventSource.onerror = function(err) {
+      console.error('EventSource failed:', err);
+    };
+  });
 
   // HELPERS
   function outputMessage ({ container, message, currentUserName }) {

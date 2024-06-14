@@ -33,9 +33,8 @@ module.exports = function (server, app) {
         const results = await getHistory(user, chatCollection);
         socket.emit(SOCKET_EVENT_GET_HISTORY, results);
 
-        const things = await getThings();
-        console.log('things', things);
-        socket.emit('initial_things', things);        
+        // const things = await getThings();
+        console.log('>>>>things', things.map(thing => thing.entity));
       } catch (error) {
         // TODO - what user experience do we want here 
       }

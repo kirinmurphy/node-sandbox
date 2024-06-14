@@ -149,3 +149,17 @@
 		display: none;
 	}
 }
+
+/* ------ mentioned entities -------------------------- */
+.mentioned-entity {
+	margin-bottom: 10px;
+	padding: 10px;
+	border-radius: 5px;
+	overflow-wrap: break-word;
+}
+
+.mentioned-entity a {
+	color: #fff;
+	text-decoration: underline;
+	cursor: pointer;
+}
