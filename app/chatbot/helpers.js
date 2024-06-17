@@ -6,7 +6,7 @@ const SOCKET_EVENT_MESSAGE = 'message';
 const MSG_BOT_NAME = 'CincoBot';
 
 const chatbotCopy = {
-  welcome: formatMessage(MSG_BOT_NAME, 'Welcome to CincoChat! <br/> Start your message with <b>@computer</b> to chat with the bot.'),
+  welcome: formatMessage(MSG_BOT_NAME, 'Welcome to CincoChat!  Use <b>@computer</b> to chat with the CincoBot.'),
   newUserAdded: username => formatMessage(MSG_BOT_NAME, `${username} has joined the chat`),
   leftChat: username => formatMessage(MSG_BOT_NAME, `${username} has left the chat`)
 };

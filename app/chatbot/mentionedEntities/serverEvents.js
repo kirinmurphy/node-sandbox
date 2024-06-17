@@ -1,7 +1,6 @@
 const { databaseName, mongoClient } = require('../../utils/mongoClient');
-const express = require('express');
+const { MONGO_TABLE_MENTIONED_ENTITIES } = require('../constants');
 
-const MONGO_TABLE_MENTIONED_ENTITIES = 'mentionedEntities';
 const clients = new Set();
 
 const db = mongoClient.db(databaseName);
@@ -52,6 +51,5 @@ async function getThings() {
 
 module.exports = {
   initializeServerEvents,
-  saveThings,
-  getThings
+  saveThings
 };

@@ -8,12 +8,10 @@ const { leaveRoom } = require('./actions/leave');
 
 const { initCicoBotInteractions } = require('./initCincoBotInteractions');
 const serverEvents = require('./mentionedEntities/serverEvents');
-const { initializeServerEvents, getThings, saveThings } = serverEvents;
+const { SOCKET_EVENT_JOIN_ROOM, SOCKET_EVENT_SEND_MESSAGE, SOCKET_EVENT_GET_HISTORY } = require('./actions/constants');
+const { MONGO_TABLE_CHATROOM, MONGO_TABLE_MENTIONED_ENTITIES } = require('./constants');
+const { initializeServerEvents, saveThings } = serverEvents;
 
-const MONGO_TABLE_CHATROOM = 'chatRoom';
-const SOCKET_EVENT_JOIN_ROOM = 'joinRoom';
-const SOCKET_EVENT_SEND_MESSAGE = 'sendMessage';
-const SOCKET_EVENT_GET_HISTORY = 'getHistory';
 
 module.exports = function (server, app) {
   const io = socketio(server);
@@ -32,18 +30,14 @@ module.exports = function (server, app) {
         joinRoom(io, socket, user);
         const results = await getHistory(user, chatCollection);
         socket.emit(SOCKET_EVENT_GET_HISTORY, results);
-
-        // const things = await getThings();
-        console.log('>>>>things', things.map(thing => thing.entity));
       } catch (error) {
         // TODO - what user experience do we want here 
       }
     });
 
     socket.on(SOCKET_EVENT_SEND_MESSAGE, async (userMessage) => { 
-      const messageConfig = { io, socket, collection: chatCollection };
-
       try {
+        const messageConfig = { io, socket, collection: chatCollection };
         sendMessage({ ...messageConfig, message: userMessage });
         initCicoBotInteractions({ ...messageConfig, userMessage, saveThings });
       } catch (error) {
@@ -60,6 +54,7 @@ module.exports = function (server, app) {
 
   cron.schedule('0 0 23 * * *', async () => {
     await chatCollection.deleteMany({});
+    await db.collection(MONGO_TABLE_MENTIONED_ENTITIES).deleteMany({});
     console.log('all chats deleted!');
   });
 };

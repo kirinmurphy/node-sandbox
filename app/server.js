@@ -2,19 +2,18 @@ const path = require('path');
 const http = require('http');
 const express = require('express');
 const cookieParser = require('cookie-parser');
-const connection = require('./app/utils/resourceRouter/connection');
-const { verifyToken, redirectIfAuthenticated } = require('./app/middlewares/auth');
+const connection = require('./utils/resourceRouter/connection');
+const { verifyToken, redirectIfAuthenticated } = require('./middlewares/auth');
 
 require('dotenv').config();
 
 const app = express();
 const server = http.createServer(app);
 
-require('./app/chatbot')(server, app);
-
 app.use(express.json());
 app.use(cookieParser());
 
+require('./chatbot')(server, app);
 
 // --- AUTHENTICTED ROUTES ------------ //
 // Endpoint to verify token
@@ -36,7 +35,7 @@ app.get('/api/users/me', verifyToken, (req, res) => {
 });
 
 app.get('/home', verifyToken, (req, res) => {
-  return res.sendFile(path.join(__dirname, './app/public/home.html'));
+  return res.sendFile(path.join(__dirname, './public/home.html'));
 });
 
 // --- PUBLIC PAGES ------------ //
@@ -48,19 +47,17 @@ const publicPaths = [
 
 publicPaths.forEach(({ url, file }) => {
   app.get(url, redirectIfAuthenticated, (req, res) => {
-    return res.sendFile(path.join(__dirname, `./app/public/${file}`));
+    return res.sendFile(path.join(__dirname, `./public/${file}`));
   });
 });
 
-app.use('/jwt', require('./app/jwt_demo'));
+app.use('/api/chatRooms', require('./resources/chatRooms'));
 
-app.use('/api/chatRooms', require('./app/resources/chatRooms'));
+app.use('/posts', require('./resources/posts'));
 
-app.use('/posts', require('./app/resources/posts'));
+app.use('/api/users', require('./resources/users'));
 
-app.use('/api/users', require('./app/resources/users'));
-
-app.use(express.static(path.join(__dirname, './app/public')));
+app.use(express.static(path.join(__dirname, './public')));
 
 app.get('*', (req, res) => { res.redirect('/'); });
 

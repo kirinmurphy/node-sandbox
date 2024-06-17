@@ -8,4 +8,11 @@ Please make sure that the text is in proper JSON format including properly escap
 
 Here are the the words: `;
 
+
+// function getThingCheckerPreprompt({ room: { name, username } }) {
+//   return thingCheckerPreprompt.replace(ROOM_NAME, room);
+// }
+
+
 module.exports = { thingCheckerPreprompt };
+

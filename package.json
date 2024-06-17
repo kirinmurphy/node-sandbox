@@ -2,10 +2,10 @@
   "name": "node-tut2",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "app/server.js",
   "scripts": {
-    "start": "node server",
-    "dev": "nodemon server",
+    "start": "node app/server",
+    "dev": "nodemon app/server",
     "migrate": "node runMigration.js",
     "build-and-migrate": "yarn --frozen-lockfile install",
     "build-and-migrate-untested": "yarn --frozen-lockfile install && yarn run migrate"

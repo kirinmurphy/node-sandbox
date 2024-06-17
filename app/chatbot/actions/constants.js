@@ -1,0 +1,9 @@
+const SOCKET_EVENT_JOIN_ROOM = 'joinRoom';
+const SOCKET_EVENT_SEND_MESSAGE = 'sendMessage';
+const SOCKET_EVENT_GET_HISTORY = 'getHistory';
+
+module.exports = {
+  SOCKET_EVENT_JOIN_ROOM,
+  SOCKET_EVENT_SEND_MESSAGE,
+  SOCKET_EVENT_GET_HISTORY
+};
