@@ -1,4 +1,4 @@
-const { makeQuery } = require('./helpers');
+const { makeQuery } = require('./utils/makeQuery.js');
 
 async function deleteOne (req, res) {
   const { 

@@ -1,4 +1,4 @@
-const { makeQuery } = require('./helpers');
+const { makeQuery } = require('./utils/makeQuery.js');
 
 async function getCollection (req, res) {
   const { sql } = req;
@@ -6,22 +6,22 @@ async function getCollection (req, res) {
   return res.json({ collection: results });
 }
 
-async function getOne (req, res) {
-  const { 
-    params: { id }, 
-    sql 
-  } = req;
+async function getOneForApi (req, res) {
+  const { params: { id }, sql } = req;
 
   const result = await makeQuery([sql.getEntry(id)], res);
 
-  if ( result.length ) { 
-    return res.json(result[0]); 
-  } else { 
-    return res.status(404).send(`Id ${id} doesn't exist`); 
-  } 
+  return res && res.json(result) 
+    || res.status(404).send(`Id ${id} doesn't exist`);
+}
+
+async function getOne ({ params: { id }, sql, res = null }) {
+  const result = await makeQuery([sql.getEntry(id)], res);
+  return result.length ? result[0] : null;
 }
 
 module.exports = {
   getCollection,
-  getOne
+  getOne,
+  getOneForApi
 };

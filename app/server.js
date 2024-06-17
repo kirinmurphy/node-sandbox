@@ -51,11 +51,11 @@ publicPaths.forEach(({ url, file }) => {
   });
 });
 
-app.use('/api/chatRooms', require('./resources/chatRooms'));
+app.use('/api/chatRooms', require('./resources/chatRooms').router);
 
-app.use('/posts', require('./resources/posts'));
+// app.use('/posts', require('./resources/posts'));
 
-app.use('/api/users', require('./resources/users'));
+app.use('/api/users', require('./resources/users').router);
 
 app.use(express.static(path.join(__dirname, './public')));
 

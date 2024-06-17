@@ -130,6 +130,5 @@ function authenticate({ data, shadowRoot, dispatch, onLogout }) {
     }
   });
   
-  console.log('DISPATCHIN!');
   dispatch(new CustomEvent('user-data', { detail: { username }, bubbles: true, composed: true }));
 }

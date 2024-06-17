@@ -72,15 +72,11 @@ import { fetchRoomDetails } from './fetchRoomDetails.js';
   }
 
   document.addEventListener('DOMContentLoaded', function() {
-    
     const updatesDiv = document.getElementById('mentioned-entities');
     const eventSource = new EventSource('/events');
-    console.log('YOOOOOOOOOO');
-    // eventSource.addEventListener('message', event => {
     eventSource.onmessage = function(event) {
-
       const data = JSON.parse(event.data);
-      console.log('DATAAA', data);
+
       data.forEach(({ entity, fact }) => {
         const div = document.createElement('div');
         div.classList.add('mentioned-entity');

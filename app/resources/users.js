@@ -21,7 +21,9 @@ const userResource = resourceRouter({
   optionalFields: ['created_at', 'updated_at']
 });
 
-userResource.post('/signup', async (req, res) => {
+const { router } = userResource;
+
+router.post('/signup', async (req, res) => {
   const { username, email, password } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -38,7 +40,7 @@ userResource.post('/signup', async (req, res) => {
   });
 });
 
-userResource.post('/login', (req, res) => {
+router.post('/login', (req, res) => {
   const { emailOrUsername, password } = req.body;
 
   const query = 'SELECT * FROM users WHERE email = ? OR username = ?';
@@ -59,7 +61,7 @@ userResource.post('/login', (req, res) => {
   });
 });
 
-userResource.post('/logout', (req, res) => {
+router.post('/logout', (req, res) => {
   res.clearCookie('token');
   return res.json({ success: true });
 });

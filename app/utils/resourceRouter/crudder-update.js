@@ -1,8 +1,5 @@
-const { 
-  makeQuery,
-  getMatchingFields, 
-  getCleanedQuery 
-} = require('./helpers');
+const { getMatchingFields, getCleanedQuery } = require('./helpers');
+const { makeQuery } = require('./utils/makeQuery.js');
 
 async function updateOne (req, res) {
   const { 

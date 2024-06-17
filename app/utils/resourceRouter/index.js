@@ -1,9 +1,10 @@
 const express = require('express');
 
-const { getSql, makeQuery } = require('./helpers');
+const { getSql } = require('./helpers');
+const { makeQuery } = require('./utils/makeQuery');
 
 const { addOne } = require('./crudder-create');
-const { getCollection, getOne } = require('./crudder-read');
+const { getCollection, getOneForApi } = require('./crudder-read');
 const { updateOne } = require('./crudder-update');
 const { deleteOne, deleteAll } = require('./crudder-delete');
 
@@ -28,7 +29,7 @@ module.exports = function (props) {
 
   router.get('/', getCollection);
   
-  router.get('/:id', getOne);
+  router.get('/:id', getOneForApi);
   
   router.put('/:id', updateOne);
   
@@ -36,5 +37,5 @@ module.exports = function (props) {
   
   router.delete('/', deleteAll);
 
-  return router;
+  return { router };
 };
