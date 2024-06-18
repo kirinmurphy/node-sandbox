@@ -6,7 +6,8 @@ async function getCincoBotKeywordBlurbs ({ userMessage, roomProps }) {
   const keywords = getAllCapitalizedWords({ text: userMessage });
   if ( keywords.size === 0 ) { return null; } 
   const messages = formatMessagePayload({ keywords, roomProps });
-  return await queryCincoBot({ messages }); 
+  const response = await queryCincoBot({ messages });
+  return JSON.parse(response); 
 }
 
 // Capitalized words that are together are considered one word

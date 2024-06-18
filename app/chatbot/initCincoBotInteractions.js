@@ -1,7 +1,7 @@
 const { sendMessage } = require('./actions/sendMessage');
 const { getCincoBotChatResponse } = require('./cincoBot/getCincoBotChatResponse');
 const { getCincoBotKeywordBlurbs } = require('./cincoBot/getCincoBotKeywordBlurbs');
-const { saveThings } = require('./mentionedEntities/serverEvents');
+const { saveThings } = require('./mentionedEntities/serverEvent');
 
 const { CHATBOT_NAME } = require("./cincoBot/constants");
 
@@ -15,10 +15,9 @@ async function initCicoBotInteractions ({ userMessage, roomData, ...messageConfi
     await sendMessage({ ...messageConfig, message, usernameOverride });
   } 
 
-  const entities = await getCincoBotKeywordBlurbs({ userMessage, roomData });
   try {
-    const mentionedEntities = JSON.parse(entities);
-    await saveThings({ mentionedEntities, roomId: roomData.roomId });
+    const mentionedEntities = await getCincoBotKeywordBlurbs({ userMessage, roomData });
+    await saveThings({ mentionedEntities, roomId: Number(roomData.id) });
 
   } catch (err) {
     console.log('mentionedEntities was not in the correct json format');

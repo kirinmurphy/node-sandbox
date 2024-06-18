@@ -40,4 +40,5 @@ function bindSocketEvents(messageConfig) {
   });  
 }
 
+
 module.exports = { bindSocketEvents };

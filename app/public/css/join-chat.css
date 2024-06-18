@@ -50,5 +50,11 @@
 }
 
 .blowup-colors-actions .link {
-	font-size:.85rem;
+	display: inline-block;
+	padding: .75rem 0 0 .25rem;
+	font-size:.9rem;
+}
+
+.blowup-colors-actions .link.inverted {
+	color: #fff;
 }

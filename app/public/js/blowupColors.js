@@ -49,6 +49,7 @@
   function setBlownUpScreenState () {
     elements.blowItUp.innerText = copy.stillDontLikeIt;
     elements.blowItUp.style = 'display:none;';
+    elements.blowItUp.classList.add('inverted');
     elements.okTooMuch.style = 'display:block';
     [...elements.buttons].forEach(button => {
       button.style.color = '#fff';
