@@ -1,4 +1,4 @@
-const thingCheckerPreprompt = `I would like you to scan through this list of entities, and identify anything that is a proper noun or a unique entity.  Some words are not proper nouns, please ignore those.  For the rest.  
+const mentionedEntityPreprompt = `I would like you to scan through this list of entities, and identify anything that is a proper noun or a unique entity.  Some words are not proper nouns, please ignore those.  For the rest.  
 
 Please give me a rare fact about each topic, related to the theme of this conversation.  The theme of this conversation is ROOM_NAME - ROOM_DESCRIPTION.  Please make sure that the fact is unique to the topic and the theme.
 
@@ -13,12 +13,11 @@ Please limit th fact for each entity to under 100 characters.
 Here are the entities: `;
 
 
-function getThingCheckerPreprompt({ roomProps = {} }) {
+function getMentionedEntityPrePrompt({ roomProps = {} }) {
   const { name, description } = roomProps;
-  return thingCheckerPreprompt
+  return mentionedEntityPreprompt
     .replace('ROOM_NAME', name)
     .replace('ROOM_DESCRIPTION', description);
 }
 
-module.exports = { getThingCheckerPreprompt };
-
+module.exports = { getMentionedEntityPrePrompt };

@@ -1,10 +1,7 @@
 
 
-const { CHATBOT_NAME, AI_CHAT_ROLES } = require('./constants');
+const { CHATBOT_NAME, AI_CHAT_ROLES, BOT_PROMPT_KEYWORD, MAX_CHAT_HISTORY_COUNT } = require('./constants');
 const { queryCincoBot } = require('./queryCincoBot');
-
-const PROMPT_SIGNAL = '@computer';
-const MAX_CHAT_HISTORY_COUNT = 20;
 
 async function getCincoBotChatResponse ({ message, collection }) {
   const filteredCollection = await getFilteredBotChatHistory({ collection });
@@ -12,8 +9,10 @@ async function getCincoBotChatResponse ({ message, collection }) {
   return await queryCincoBot({ messages });
 }
 
+module.exports = { getCincoBotChatResponse };
+
 async function getFilteredBotChatHistory ({ collection }) {
-  const promptFilter = { text: { $regex: PROMPT_SIGNAL, $options: 'i' }};
+  const promptFilter = { text: { $regex: BOT_PROMPT_KEYWORD, $options: 'i' }};
   const botFilter = { username: CHATBOT_NAME };
   const query = { $or: [promptFilter, botFilter] };
   const options = { sort: { timestamp: -1 }, limit: MAX_CHAT_HISTORY_COUNT };
@@ -26,9 +25,7 @@ function getChatFormattedForGPT ({ filteredCollection, message }) {
     return { role, content: text };
   });
 
-  const userMessageText = message.replace(PROMPT_SIGNAL, '').trim();
+  const userMessageText = message.replace(BOT_PROMPT_KEYWORD, '').trim();
   const userMessage = { role: AI_CHAT_ROLES.user, content: userMessageText };
   return [...formattedFilteredCollection, userMessage];
 }
-
-module.exports = { getCincoBotChatResponse };

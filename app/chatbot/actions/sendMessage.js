@@ -12,7 +12,7 @@ async function sendMessage(props) {
 
   const { insertedId } = await collection.insertOne(document);
 
-  socket.emit('savedMessage', { status: 'saved', id: insertedId });
+  // socket.emit('savedMessage', { status: 'saved', id: insertedId });
 
   io.to(roomName).emit(SOCKET_EVENT_MESSAGE, formatMessage(senderUsername, message));
 };
