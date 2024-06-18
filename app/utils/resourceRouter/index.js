@@ -4,7 +4,7 @@ const { getSql } = require('./helpers');
 const { makeQuery } = require('./utils/makeQuery');
 
 const { addOne } = require('./crudder-create');
-const { getCollection, getOneForApi } = require('./crudder-read');
+const { getCollectionForApi, getOneForApi, getOne, getCollection } = require('./crudder-read');
 const { updateOne } = require('./crudder-update');
 const { deleteOne, deleteAll } = require('./crudder-delete');
 
@@ -27,7 +27,7 @@ module.exports = function (props) {
   
   router.post('/', addOne);
 
-  router.get('/', getCollection);
+  router.get('/', getCollectionForApi);
   
   router.get('/:id', getOneForApi);
   
@@ -37,5 +37,12 @@ module.exports = function (props) {
   
   router.delete('/', deleteAll);
 
-  return { router };
+  const getDbMethods = (sql) => ({
+    getOne: ({ id }) => getOne({ id, sql }),
+    getCollection: () => getCollection({ sql })
+  });
+
+  const dbMethods = getDbMethods(sql);
+
+  return { router, dbMethods };
 };

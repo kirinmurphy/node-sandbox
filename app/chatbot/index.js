@@ -20,26 +20,31 @@ module.exports = function (server, app) {
 
   const db = mongoClient.db(databaseName);
 
-  const chatCollection = db.collection(MONGO_TABLE_CHATROOM);
+  const chatRoomTable = db.collection(MONGO_TABLE_CHATROOM);
 
   initializeServerEvents({ app });
+
+  let roomData;
 
   io.on('connection', (socket) => {
     socket.on(SOCKET_EVENT_JOIN_ROOM, async (user) => {
       try {
-        joinRoom(io, socket, user);
-        const results = await getHistory(user, chatCollection);
+        roomData = user.roomData;
+        const { name } = roomData;
+        console.log('roomData', roomData);
+        joinRoom({ io, socket, user });
+        const results = await getHistory({ roomName: name, collection: chatRoomTable });
         socket.emit(SOCKET_EVENT_GET_HISTORY, results);
       } catch (error) {
         // TODO - what user experience do we want here 
       }
     });
 
-    socket.on(SOCKET_EVENT_SEND_MESSAGE, async (userMessage) => { 
+    socket.on(SOCKET_EVENT_SEND_MESSAGE, async ({ userMessage }) => { 
       try {
-        const messageConfig = { io, socket, collection: chatCollection };
+        const messageConfig = { io, socket, collection: chatRoomTable };
         sendMessage({ ...messageConfig, message: userMessage });
-        initCicoBotInteractions({ ...messageConfig, userMessage, saveThings });
+        initCicoBotInteractions({ ...messageConfig, userMessage, saveThings, roomData });
       } catch (error) {
         // TODO - what user experience do we want here 
       }    
@@ -53,7 +58,7 @@ module.exports = function (server, app) {
   });   
 
   cron.schedule('0 0 23 * * *', async () => {
-    await chatCollection.deleteMany({});
+    await chatRoomTable.deleteMany({});
     await db.collection(MONGO_TABLE_MENTIONED_ENTITIES).deleteMany({});
     console.log('all chats deleted!');
   });

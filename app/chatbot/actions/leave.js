@@ -14,7 +14,7 @@ function leaveRoom (io, socketId) {
   if ( user ) {
     removeFromUsersCollection(user);
     io.to(user.room).emit(SOCKET_EVENT_MESSAGE, chatbotCopy.leftChat(user.username));
-    updateRoomState(io, user.room);
+    updateRoomState(io, user.roomData.name);
   }
 };
 

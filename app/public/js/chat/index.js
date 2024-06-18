@@ -32,7 +32,7 @@ import { fetchRoomDetails } from './fetchRoomDetails.js';
       elements.roomName.innerText = roomName;
 
       // Join room with room name
-      socket.emit('joinRoom', { username: currentUserName, room: roomName });
+      socket.emit('joinRoom', { username: currentUserName, roomData });
 
       socket.on('roomUsers', ({ room, users }) => {
         outputRoomName(room);
@@ -61,8 +61,8 @@ import { fetchRoomDetails } from './fetchRoomDetails.js';
 
       elements.chatForm.addEventListener('submit', (event) => {
         event.preventDefault();
-        const msg = event.target.elements.msg.value;
-        socket.emit('sendMessage', msg);
+        const userMessage = event.target.elements.msg.value;
+        socket.emit('sendMessage', { userMessage });
         event.target.elements.msg.value = '';
         event.target.elements.msg.focus();
       });
@@ -73,7 +73,7 @@ import { fetchRoomDetails } from './fetchRoomDetails.js';
 
   document.addEventListener('DOMContentLoaded', function() {
     const updatesDiv = document.getElementById('mentioned-entities');
-    const eventSource = new EventSource('/events');
+    const eventSource = new EventSource(`/events?roomId=${roomId}`);
     eventSource.onmessage = function(event) {
       const data = JSON.parse(event.data);
 

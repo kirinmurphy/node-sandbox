@@ -1,12 +1,13 @@
 const { AI_CHAT_ROLES } = require('./constants.js');
-const { thingCheckerPreprompt } = require('./thingCheckerPreprompt.js');
+const { getThingCheckerPreprompt } = require('./getThingCheckerPreprompt.js');
 const { queryCincoBot } = require('./queryCincoBot.js');
 
-async function getCincoBotKeywordBlurbs ({ userMessage }) {
+async function getCincoBotKeywordBlurbs ({ userMessage, roomProps }) {
   const keywords = getAllCapitalizedWords({ text: userMessage });
   if ( keywords.size === 0 ) { return null; } 
   const keywordString = Array.from(keywords).join(', ');
-  const formattedMsg = `${thingCheckerPreprompt} ${keywordString}`;
+  const prePrompt = getThingCheckerPreprompt({ roomProps }); 
+  const formattedMsg = `${prePrompt} ${keywordString}`;
   const messages = [{ role: AI_CHAT_ROLES.user, content: formattedMsg }]; 
   return await queryCincoBot({ messages }); 
 }

@@ -8,22 +8,22 @@ const {
   addToUsersCollection
 } = require('../users');
 
-function joinRoom (io, socket, user) {
-  const { username, room } = user;
+function joinRoom ({ io, socket, user }) {
+  const { username, roomData } = user;
+  const { name: roomName } = roomData;
+  socket.join(roomName);
 
-  socket.join(room);
-
-  socket.broadcast.to(room).emit(SOCKET_EVENT_MESSAGE, chatbotCopy.newUserAdded(username)); 
+  socket.broadcast.to(roomName).emit(SOCKET_EVENT_MESSAGE, chatbotCopy.newUserAdded(username)); 
 
   addToUsersCollection(socket.id, user);
 
-  updateRoomState(io, room);
+  updateRoomState(io, roomName);
 
   socket.emit(SOCKET_EVENT_MESSAGE, chatbotCopy.welcome);
 }
 
-async function getHistory (user, collection) {
-  const results = await collection.find({ room:user.room }).limit(100).sort({ _id:1 });
+async function getHistory ({ roomName, collection }) {
+  const results = await collection.find({ room: roomName }).limit(100).sort({ _id:1 });
   return await results.toArray();
 };
 

@@ -12,8 +12,8 @@ function removeFromUsersCollection(leavingUser) {
   users = users.filter(user => user !== leavingUser);
 }
 
-function getRoomUsers (room) {
-  return users.filter(user => user.room === room);
+function getRoomUsers (roomName) {
+  return users.filter(user => user.roomData.name === roomName);
 }
 
 module.exports = {

@@ -7,7 +7,7 @@ const db = mongoClient.db(databaseName);
 const thingsCollection = db.collection(MONGO_TABLE_MENTIONED_ENTITIES);
 
 function initializeServerEvents({ app }) {
-  app.get('/events', (req, res) => {
+  app.get('/events', async (req, res) => {
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
@@ -30,7 +30,7 @@ function pushUpdates(things) {
   });
 }
 
-async function saveThings(mentionedEntities) {
+async function saveThings(mentionedEntities, roomId) {
   try {
     await thingsCollection.insertMany(mentionedEntities);
     pushUpdates(mentionedEntities);

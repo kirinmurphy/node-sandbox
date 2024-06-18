@@ -155,7 +155,6 @@ class JoinFormComponent extends HTMLElement {
     if (isAuthenticated) {
       const usernameInput = this.shadowRoot.getElementById('hidden-username');
       usernameInput.value = username;
-      console.log('USERNAME', username);
     }
   }  
 
