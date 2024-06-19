@@ -1,12 +1,6 @@
-const {
-  SOCKET_EVENT_MESSAGE,
-  chatbotCopy,
-  updateRoomState
-} = require('../helpers');
-
-const { 
-  addToUsersCollection
-} = require('../users');
+const { chatbotCopy, updateRoomState } = require('../helpers');
+const { addToUsersCollection } = require('../users');
+const { SOCKET_EVENT_MESSAGE } = require('./constants');
 
 function joinRoom ({ io, socket, user }) {
   const { username, roomData } = user;

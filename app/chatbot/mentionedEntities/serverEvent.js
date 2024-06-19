@@ -24,6 +24,7 @@ function initMentionedEntitiesEvent({ app }) {
 
 async function saveThings({ mentionedEntities, roomId }) {
   try {
+    if ( !mentionedEntities.length ) { return; }
     const formattedEntries = mentionedEntities.map(entity => ({ ...entity, roomId }));
     await mentionedEntitiesCollection.insertMany(formattedEntries);
     pushUpdates({ mentionedEntities: formattedEntries, roomId });

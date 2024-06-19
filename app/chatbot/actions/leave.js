@@ -1,13 +1,6 @@
-const {
-  SOCKET_EVENT_MESSAGE,
-  chatbotCopy,
-  updateRoomState
-} = require('../helpers');
-
-const { 
-  getCurrentUser, 
-  removeFromUsersCollection
-} = require('../users');
+const { chatbotCopy, updateRoomState} = require('../helpers');
+const { getCurrentUser, removeFromUsersCollection} = require('../users');
+const { SOCKET_EVENT_MESSAGE } = require('./constants');
 
 function leaveRoom (io, socketId) {
   const user = getCurrentUser(socketId);
@@ -18,6 +11,4 @@ function leaveRoom (io, socketId) {
   }
 };
 
-module.exports = { 
-  leaveRoom 
-};
+module.exports = { leaveRoom };
