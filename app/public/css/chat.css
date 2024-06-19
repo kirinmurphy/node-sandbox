@@ -90,21 +90,21 @@
 	margin-bottom: 1rem;
 }
 
+/* -- MESSAGE -------------------------- */
 .chat-messages .message {
 	width: 95%;
 	padding: 10px;
-	background-color: var(--light-color);
 	border-radius: 5px;
 	overflow-wrap: break-word;
+	font-size: 1rem;
+}
+
+.chat-messages .message:not(.bot) {
+	background-color: var(--light-color);
 }
 
 .chat-messages .message:not(:last-of-type) {
 	margin-bottom: 15px;
-}
-
-.chat-messages .message.me {
-	align-self: end;
-	background: #d5e8fb;
 }
 
 .chat-messages .message .meta {
@@ -119,6 +119,14 @@
 	color: #777;
 }
 
+.chat-messages .message.me {
+	align-self: end;
+	background: #dbe8ff;
+}
+
+.chat-messages .message.bot {
+	font-size: .9rem;
+}
 
 /* -- FORM -------------------------- */
 .chat-form-container {
