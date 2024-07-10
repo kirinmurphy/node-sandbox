@@ -10,7 +10,8 @@ services:
     ports:
       - "3002:3002"
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     networks:
       - my_network
 
@@ -21,9 +22,17 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
     ports:
       - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: --default-time-zone='+00:00'
     networks:
       - my_network
-
+    volumes:
+      - /usr/share/zoneinfo:/usr/share/zoneinfo:ro
+      
 networks:
   my_network:
     driver: bridge

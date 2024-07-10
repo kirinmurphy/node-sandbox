@@ -13,8 +13,12 @@ RUN yarn install
 # Copy the rest of the application code to the container
 COPY . .
 
+# Copy wait-for-it script to the container
+COPY wait-for-it.sh /wait-for-it.sh
+RUN chmod +x /wait-for-it.sh
+
 # Expose the port the app runs on
 EXPOSE 3002
 
-# Define the command to run the application
-CMD ["node", "app/server.js"]
+# Define the command to run the application, waiting for MySQL to be ready
+CMD ["/wait-for-it.sh", "mysql:3306", "--", "node", "app/server.js"]
