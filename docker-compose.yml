@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+    image: cinco-chat
+    env_file:
+      - .env
+    ports:
+      - "3002:3002"
+    depends_on:
+      - mysql
+    networks:
+      - my_network
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - "3306:3306"
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge

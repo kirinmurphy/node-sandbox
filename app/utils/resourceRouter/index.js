@@ -13,6 +13,7 @@ module.exports = function (props) {
 
   const sql = getSql(props);
   
+  console.log('----ABOUT TO CREATE TABLE -----');
   makeQuery([sql.createTable])
     .catch((err) => { console.log('create table??', err); });
 
