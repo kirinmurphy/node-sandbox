@@ -11,10 +11,13 @@ fs.mkdirSync(watchDir, { recursive: true });
 fs.mkdirSync(processedDir, { recursive: true });
 
 // create processor 
-const fileProcessor = createFileProcessor(watchDir, processedDir, ({ content, filename }) => {
-  return content.toUpperCase();  
+const fileProcessor = createFileProcessor({ 
+  watchDir, 
+  processedDir, 
+  processAction: ({ content }) => {
+    return content.toUpperCase();  
+  }
 });
-
 
 // observe 
 fileProcessor.on('fileProcessed', (filename) => {

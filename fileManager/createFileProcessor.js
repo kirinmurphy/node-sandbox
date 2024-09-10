@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const EventEmitter = require('events');
 
-function createFileProcessor (watchDir, processedDir, processContent) {
+function createFileProcessor ({ watchDir, processedDir, processAction }) {
   const emitter = new EventEmitter();
 
   function start () {
@@ -11,9 +11,9 @@ function createFileProcessor (watchDir, processedDir, processContent) {
 
       if (eventType === 'rename' && filename) {
         const filePath = path.join(watchDir, filename);
-        handleFileIfExists(filePath, () => {
+        handleFileIfExists({ filePath, handler: () => {
           processFile(filePath, filename);
-        });
+        }});
       }
     });
     console.log("Watching files in:" + watchDir)
@@ -27,10 +27,7 @@ function createFileProcessor (watchDir, processedDir, processContent) {
         return;
       }
 
-      const processedContent = processContent({ content, filename })
-
-      // console.log('content', content);
-      // console.log('filename', filename);
+      const processedContent = processAction({ content, filename })
 
       const processedFilePath = path.join(processedDir, filename);
 
@@ -62,11 +59,9 @@ function createFileProcessor (watchDir, processedDir, processContent) {
 }
 
 
-function handleFileIfExists (filePath, triggerActionifExists) {
+function handleFileIfExists ({ filePath, handler }) {
   fs.access(filePath, fs.constants.F_OK, (err) => {
-    if (!err) {
-      triggerActionifExists()
-    }
+    if (!err) { handler(); }
   });
 }
 
