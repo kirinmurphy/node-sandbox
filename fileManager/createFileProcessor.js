@@ -12,43 +12,23 @@ function createFileProcessor ({ watchDir, processedDir, processAction }) {
       if (eventType === 'rename' && filename) {
         const filePath = path.join(watchDir, filename);
         handleFileIfExists({ filePath, handler: () => {
-          processFile(filePath, filename);
+          void processFile(filePath, filename);
         }});
       }
     });
     console.log("Watching files in:" + watchDir)
   }
 
-  function processFile (filePath, filename) {
-    console.time(`processing file: ${filename}`);
-    fs.readFile(filePath, 'utf8', (err, content) => {
-      if (err) {
-        console.error(`Error reading file: ${filePath}` + err);
-        return;
-      }
+  async function processFile (filePath, filename) {
+    try {
+      await processAction({ filename });
+      await fs.promises.unlink(filePath);
 
-      const processedContent = processAction({ content, filename })
+      emitter.emit('fileProcessed', filename);
 
-      const processedFilePath = path.join(processedDir, filename);
-
-      fs.writeFile(processedFilePath, processedContent, (err) => {
-        if (err) {
-          console.error("Error wiriting processed file: " + err);
-          return;
-        }
-
-        fs.unlink(filePath, (err) => {
-          if (err) {
-            console.error("Error deleting original file: " + err);
-            return;
-          }
-
-          // console.log(`Processed and moved: ${filename}`);
-          emitter.emit('fileProcessed', filename);
-          console.timeEnd(`processing file: ${filename}`);
-        });
-      })
-    });
+    } catch (err) {
+      emitter.emit('error', err);
+    }
   }
 
   return {
@@ -58,8 +38,8 @@ function createFileProcessor ({ watchDir, processedDir, processAction }) {
   }
 }
 
-
 function handleFileIfExists ({ filePath, handler }) {
+  if (path.basename(filePath) === '.DS_Store') { return; }
   fs.access(filePath, fs.constants.F_OK, (err) => {
     if (!err) { handler(); }
   });
