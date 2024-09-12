@@ -2,6 +2,7 @@ const path = require('path');
 const http = require('http');
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const helmetConfig = require('./config/helmetConfig');
 const connection = require('./utils/resourceRouter/connection');
 const { verifyToken, redirectIfAuthenticated } = require('./middlewares/auth');
 
@@ -10,6 +11,7 @@ require('dotenv').config();
 const app = express();
 const server = http.createServer(app);
 
+app.use(helmetConfig);
 app.use(express.json());
 app.use(cookieParser());
 
