@@ -7,9 +7,8 @@ const helmetConfig = helmet({
       scriptSrc: ["'self'", "https://cdnjs.cloudflare.com"],
       styleSrc: [
         "'self'",
-        "https://cdnjs.cloudflare.com",
         "https://fonts.googleapis.com",
-        "'unsafe-inline'"  // Or use nonce/hash for more secure inline styles
+        "'unsafe-inline'"
       ],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:"],
