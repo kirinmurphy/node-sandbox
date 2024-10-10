@@ -5,6 +5,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const connection = require('../utils/resourceRouter/connection');
+const { setAuthCookies } = require('../middlewares/auth');
 
 const userResource = resourceRouter({
   tableName: 'users',
@@ -25,19 +26,29 @@ const { router } = userResource;
 
 router.post('/signup', async (req, res) => {
   const { username, email, password } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
 
-  const query = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
-  connection.query(query, [username, email, hashedPassword], (err, results) => {
-    console.log('ERRRRR', err, results);
-    if (err) {
-      return res.json({ success: false, message: 'Signup failed.' });
-    } else {
-      const token = jwt.sign({ id: results.insertId }, 'secretKey', { expiresIn: '1h' });
-      res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
-      return res.json({ success: true });
-    }
-  });
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const query = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
+    connection.query(query, [username, email, hashedPassword], (err, results) => {
+      console.log('ERRRRR', err, results);
+      if (err) {
+        // TEST: NOT WORKING
+        if (err.code === 'ER_DUP_ENTRY') {
+          return res.status(409).json({ success: false, message: 'Username or email already exists.' });
+        }
+  
+        return res.json({ success: false, message: 'Signup failed.' });
+      } else {
+        setAuthCookies({ res, userId: results.insertId });
+        return res.json({ success: true });
+      }
+    });  
+  } catch (error) {
+    console.error('Signup error:', error);
+    res.status(500).json({ success: false, message: 'Signup failed due to server error' });
+  }
 });
 
 router.post('/login', (req, res) => {
@@ -51,8 +62,7 @@ router.post('/login', (req, res) => {
       const user = results[0];
       const isMatch = await bcrypt.compare(password, user.password);
       if (isMatch) {
-        const token = jwt.sign({ id: user.id }, 'secretKey', { expiresIn: '1h' });
-        res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+        setAuthCookies({ res, userId: user.id });
         return res.json({ success: true });
       } else {
         return res.json({ success: false, message: 'Login failed.' });
@@ -62,7 +72,8 @@ router.post('/login', (req, res) => {
 });
 
 router.post('/logout', (req, res) => {
-  res.clearCookie('token');
+  res.clearCookie('accessToken');
+  res.clearCookie('refreshToken');
   return res.json({ success: true });
 });
 

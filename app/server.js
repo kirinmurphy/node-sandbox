@@ -1,5 +1,6 @@
 const path = require('path');
 const http = require('http');
+const cors = require('cors');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const helmetConfig = require('./config/helmetConfig');
@@ -13,6 +14,9 @@ const server = http.createServer(app);
 
 app.use(helmetConfig);
 app.use(express.json());
+
+// app.use(cors({ origin: '', credentials: true }));
+
 app.use(cookieParser());
 
 require('./chatbot')(server, app);
