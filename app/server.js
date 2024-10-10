@@ -65,6 +65,6 @@ app.use(express.static(path.join(__dirname, './public')));
 
 app.get('*', (req, res) => { res.redirect('/'); });
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3002;
 const successMessage = `Server running on port ${PORT}`;
 server.listen(PORT, () => console.log(successMessage));

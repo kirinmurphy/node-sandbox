@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: cinco-chat
+    env: node
+    plan: free
+    buildCommand: ""
+    startCommand: ""
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: MYSQL_ROOT_PASSWORD
+        value: ${MYSQL_ROOT_PASSWORD}
+      - key: MYSQL_DATABASE
+        value: ${MYSQL_DATABASE}
