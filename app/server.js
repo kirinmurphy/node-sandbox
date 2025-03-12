@@ -15,7 +15,7 @@ const server = http.createServer(app);
 app.use(helmetConfig);
 app.use(express.json());
 
-// app.use(cors({ origin: '', credentials: true }));
+app.use(cors());
 
 app.use(cookieParser());
 
